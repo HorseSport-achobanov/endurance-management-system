@@ -3,8 +3,6 @@ using Microsoft.Extensions.Hosting;
 
 FunctionsDebugger.Enable();
 
-var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
-    .Build();
- 
+var host = new HostBuilder().ConfigureFunctionsWorkerDefaults().Build();
+
 host.Run();
