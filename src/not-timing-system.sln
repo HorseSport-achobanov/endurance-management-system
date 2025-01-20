@@ -59,10 +59,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Not.Tests", "Not\Not.Tests\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NTS.Judge.Tests", "..\tests\NTS.Judge.Tests\NTS.Judge.Tests.csproj", "{A638DD26-3D7A-48CC-9D30-9185DD05A1C6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nexus", "Nexus", "{8EC2A953-124A-4096-B941-5F807FDF9522}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NTS.Nexus.Functions.Two", "Nexus\NTS.Nexus.Functions.Two\NTS.Nexus.Functions.Two.csproj", "{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -146,10 +142,6 @@ Global
 		{A638DD26-3D7A-48CC-9D30-9185DD05A1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A638DD26-3D7A-48CC-9D30-9185DD05A1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A638DD26-3D7A-48CC-9D30-9185DD05A1C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -167,7 +159,6 @@ Global
 		{A6196586-C84D-4CAE-957B-FB86B0063037} = {06233005-CC56-4846-8760-F7AFF5F72F4C}
 		{22608148-7347-4C99-9914-9A55EA74F6EB} = {06233005-CC56-4846-8760-F7AFF5F72F4C}
 		{A638DD26-3D7A-48CC-9D30-9185DD05A1C6} = {C950F8E2-9577-4169-9879-D9442F4FB631}
-		{68D5BC8E-115E-48A2-8EF8-D3AABDE1EA41} = {8EC2A953-124A-4096-B941-5F807FDF9522}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3CB609D9-5D54-4C11-A371-DAAC8B74E430}
