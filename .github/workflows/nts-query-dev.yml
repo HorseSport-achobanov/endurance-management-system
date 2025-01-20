@@ -1,8 +1,8 @@
-name: Build and deploy .NET Core application to Function App nts-query-dev
+name: "[net8] deploy nts-query-dev"
 on:
   push:
     branches:
-    - -test-develop
+    - test-develop
 
 env:
   AZURE_FUNCTIONAPP_NAME: nts-query-dev
