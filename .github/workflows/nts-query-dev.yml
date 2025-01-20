@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Function App nts-query-dev
+name: "[net8] deploy nts-query-dev"
 on:
   push:
     branches:
