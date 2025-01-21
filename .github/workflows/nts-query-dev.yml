@@ -2,7 +2,7 @@ name: "[net8] deploy nts-query-dev"
 on:
   push:
     branches:
-    - zz
+    - test-develop
  
 env:
   AZURE_FUNCTIONAPP_NAME: nts-query-dev
