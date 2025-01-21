@@ -8,7 +8,7 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Nexus/NTS.Nexus.Functions.Two/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: Nexus/NTS.Nexus.Functions.Two
+  WORKING_DIRECTORY: src/Nexus/NTS.Nexus.Functions.Two
 jobs:
   build:
     runs-on: ubuntu-latest
