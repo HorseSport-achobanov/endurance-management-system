@@ -3,7 +3,7 @@ on:
   push:
     branches:
     - test-develop
-
+ 
 env:
   AZURE_FUNCTIONAPP_NAME: nts-query-dev
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Nexus/NTS.Nexus.Functions.Two/published
