@@ -2,7 +2,7 @@ name: "[net8] deploy nts-query-dev"
 on:
   push:
     branches:
-    - test-develop
+    - zz
  
 env:
   AZURE_FUNCTIONAPP_NAME: nts-query-dev
@@ -52,5 +52,5 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        publish-profile: ${{ secrets.nts_query_dev_625A }} # change to env (don't forget repo secret)
+        publish-profile: ${{ secrets.NTS_QUERY_DEV_625A }} # change to env (don't forget repo secret)
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
