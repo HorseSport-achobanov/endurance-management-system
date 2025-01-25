@@ -52,9 +52,6 @@ jobs:
       with:
         name: functionapp
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-
-    - name: Inspect directory contents
-      run: ls -la Nexus/NTS.Nexus.Test/published/
     
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
