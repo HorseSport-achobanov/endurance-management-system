@@ -9,7 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: Nexus/NTS.Nexus.Test
-  DOTNET_CORE_VERSION_INPROC: 6.0.x
+#   DOTNET_CORE_VERSION_INPROC: 6.0.x
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,17 +19,25 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Setup .NET Core (for inproc extensions)
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
-        include-prerelease: True
+    # - name: Setup .NET Core (for inproc extensions)
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
+    #     include-prerelease: True
+
+    # Slap on top of every build: see https://github.com/Not-Endurance/not-timing-system/issues/361
+    - name: Set current workding directory env
+      run: echo "CURRENT_DIR=$(pwd)/src" >> $GITHUB_ENV
+    - name: Remove local-cache NuGet source
+      run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
+
+
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} -property:SolutionDir="$CURRENT_DIR" --no-restore
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} -property:SolutionDir="$CURRENT_DIR" --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
     - name: Publish Artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -48,5 +56,5 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        publish-profile: ${{ secrets.nts_nexus_test_44A0 }}
+        publish-profile: ${{ secrets.NTS_NEXUS_TEST_44A0 }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
