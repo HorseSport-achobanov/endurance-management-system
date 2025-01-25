@@ -47,6 +47,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+    - name: Inspect directory contents
+      run: ls -la .
     - name: Inspect Zip Package Contents
       run: unzip -l Nexus/NTS.Nexus.Test/published/functionapp.zip
 
