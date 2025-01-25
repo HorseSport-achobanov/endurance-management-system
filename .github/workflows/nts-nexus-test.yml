@@ -63,3 +63,4 @@ jobs:
         publish-profile: ${{ secrets.NTS_NEXUS_TEST_44A0 }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         sku: flexconsumption
+        remote-build: true
