@@ -48,7 +48,7 @@ jobs:
     needs: build
     steps:
     - name: Inspect Zip Package Contents
-      run: unzip -l ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      run: unzip -l Nexus/NTS.Nexus.Test/published/functionapp.zip
 
     - name: Download artifact from build job
       uses: actions/download-artifact@v3
