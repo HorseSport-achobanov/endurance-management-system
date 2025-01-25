@@ -59,7 +59,9 @@ jobs:
     #   run: ls -la Nexus/NTS.Nexus.Test/published/functionapp
     # - name: Inspect Zip Package Contents
     #   run: unzip -l Nexus/NTS.Nexus.Test/published/functionapp.zip
-
+    - name: inspect files
+      run: ls -la .
+      
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
       with:
