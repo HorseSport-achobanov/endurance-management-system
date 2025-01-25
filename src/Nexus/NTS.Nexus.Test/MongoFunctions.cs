@@ -9,11 +9,11 @@ using NTS.Nexus.Test.Models;
 
 namespace NTS.Nexus.Test;
 
-public class Mongo
+public class MongoFunctions
 {
-    readonly ILogger<Mongo> _logger;
+    readonly ILogger<MongoFunctions> _logger;
 
-    public Mongo(ILogger<Mongo> logger)
+    public MongoFunctions(ILogger<MongoFunctions> logger)
     {
         _logger = logger;
     }
