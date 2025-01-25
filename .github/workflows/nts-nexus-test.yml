@@ -5,10 +5,10 @@ on:
     - feature/azure-function-poc
 env:
   AZURE_FUNCTIONAPP_NAME: nts-nexus-test
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: src/Nexus/NTS.Nexus.Test/published
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: Nexus/NTS.Nexus.Test/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: Nexus/NTS.Nexus.Test
+  WORKING_DIRECTORY: src/Nexus/NTS.Nexus.Test
 #   DOTNET_CORE_VERSION_INPROC: 6.0.x
 jobs:
   build:
