@@ -9,7 +9,7 @@ env:
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
   WORKING_DIRECTORY: src/Nexus/NTS.Nexus.Test
-  DOTNET_CORE_VERSION_INPROC: 6.0.x
+#   DOTNET_CORE_VERSION_INPROC: 6.0.x
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,17 +19,18 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: ${{ env.DOTNET_CORE_VERSION }}
-    - name: Setup .NET Core (for inproc extensions)
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
-        include-prerelease: True
+    # - name: Setup .NET Core (for inproc extensions)
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: ${{ env.DOTNET_CORE_VERSION_INPROC }}
+    #     include-prerelease: True
 
     # Slap on top of every build: see https://github.com/Not-Endurance/not-timing-system/issues/361
     - name: Set current workding directory env
       run: echo "CURRENT_DIR=$(pwd)/src" >> $GITHUB_ENV
     - name: Remove local-cache NuGet source
       run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
+
 
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
