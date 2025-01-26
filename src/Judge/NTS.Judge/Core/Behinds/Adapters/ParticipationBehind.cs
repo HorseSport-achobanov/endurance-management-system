@@ -71,6 +71,8 @@ public class ParticipationBehind
     {
         Task action() => SafeUpdate(model);
         await SafeHelper.Run(action);
+
+        EmitChange();
     }
 
     public async Task Process(Snapshot snapshot)
