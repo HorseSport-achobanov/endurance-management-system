@@ -6,5 +6,5 @@ namespace NTS.Judge.Core;
 
 public interface ISnapshotProcessor : ISingleton
 {
-    Task<Participation> Process(Snapshot snapshot);
+    Task Process(Snapshot snapshot);
 }

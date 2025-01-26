@@ -3,7 +3,6 @@ using Not.Application.CRUD.Ports;
 using Not.Blazor.CRUD.Ports;
 using Not.Exceptions;
 using Not.Safe;
-using NTS.Application.RPC;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Core.Aggregates.Participations;
 using NTS.Domain.Enums;
@@ -25,27 +24,30 @@ public class ParticipationBehind
         IEliminations,
         IDashboardBehind,
         IUpdateBehind<PhaseUpdateModel>,
+        ISnapshotProcessor,
         IManualProcessor
 {
     readonly List<int> _recentlyProcessed = [];
-    readonly ISnapshotProcessor _snapshotProcessor;
     readonly IJudgeRpcClient _judgeRpcClient;
     readonly IRepository<Participation> _participationRepository;
+    readonly IRepository<SnapshotResult> _snapshotResultRepository;
     Participation? _selectedParticipation;
 
     public ParticipationBehind(
         IJudgeRpcClient judgeRpcClient,
-        ISnapshotProcessor snapshotProcessor,
-        IRepository<Participation> participationRepository
+        IRepository<Participation> participationRepository,
+        IRepository<SnapshotResult> snapshotResultRepository
     )
     {
         _judgeRpcClient = judgeRpcClient;
-        _snapshotProcessor = snapshotProcessor;
         _participationRepository = participationRepository;
+        _snapshotResultRepository = snapshotResultRepository;
     }
 
     public IReadOnlyList<int> RecentlyProcessed => _recentlyProcessed;
+
     public IEnumerable<Participation> Participations { get; private set; } = [];
+
     public Participation? SelectedParticipation
     {
         get => _selectedParticipation;
@@ -74,12 +76,8 @@ public class ParticipationBehind
 
     public async Task Update(PhaseUpdateModel model)
     {
-        var participation = Participations.FirstOrDefault(x => x.Phases.Any(y => y.Id == model.Id));
-        GuardHelper.ThrowIfDefault(participation);
-
-        participation.Update(model);        
-        await _participationRepository.Update(participation);
-        UpdateState(participation);
+        Task action() => SafeUpdate(model);
+        await SafeHelper.Run(action);
     }
 
     public async Task Process(Snapshot snapshot)
@@ -139,6 +137,16 @@ public class ParticipationBehind
         await SafeHelper.Run(action);
     }
 
+    async Task SafeUpdate(PhaseUpdateModel model)
+    {
+        var participation = Participations.FirstOrDefault(x => x.Phases.Any(y => y.Id == model.Id));
+        GuardHelper.ThrowIfDefault(participation);
+
+        participation.Update(model);
+        await _participationRepository.Update(participation);
+        EmitChange();
+    }
+
     async Task SafeRequestReinspection(bool requestFlag)
     {
         SelectedParticipation!.ChangeReinspection(requestFlag);
@@ -168,10 +176,21 @@ public class ParticipationBehind
 
     async Task SafeProcess(Snapshot snapshot)
     {
-        var participation = await _snapshotProcessor.Process(snapshot);
-        
+        var participation = Participations.FirstOrDefault(x =>
+            x.Combination.Number == snapshot.Number
+        );
+        if (participation == null)
+        {
+            return;
+        }
+        var result = participation.Process(snapshot);
+        if (result.Type == SnapshotResultType.Applied)
+        {
+            await _participationRepository.Update(participation);
+        }
+        await _snapshotResultRepository.Create(result);
         _recentlyProcessed.Add(participation.Combination.Number);
-        UpdateState(participation);
+        EmitChange();
     }
 
     async Task SafeWithdraw()
@@ -226,19 +245,6 @@ public class ParticipationBehind
         SelectedParticipation.Restore();
         await _participationRepository.Update(SelectedParticipation);
 
-        EmitChange();
-    }
-
-    void UpdateState(Participation participation)
-    {
-        if(participation.Combination.Number == SelectedParticipation?.Combination.Number)
-        {
-            SelectedParticipation = participation;
-        }
-        var participations = Participations.ToList();
-        var index = participations.IndexOf(participation);
-        participations[index] = participation;
-        Participations = participations;
         EmitChange();
     }
 }
