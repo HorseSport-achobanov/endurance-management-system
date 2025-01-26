@@ -16,7 +16,7 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient
         : base(socket)
     {
         _snapshotProcessor = snapshotProcessor;
-        RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(ISnapshotProcessor.Process), ReceiveSnapshots);
+        RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
     }
 
     public async Task ReceiveSnapshots(IEnumerable<Snapshot> snapshots)
