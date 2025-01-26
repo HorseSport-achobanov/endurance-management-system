@@ -1,14 +1,16 @@
 ﻿using Not.Application.RPC.Clients;
 using Not.Application.RPC.SignalR;
 using Not.Injection;
+using Not.Startup;
 using NTS.Application.RPC;
+using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Core.Objects.Payloads;
 using NTS.Domain.Objects;
 using NTS.Judge.Core;
 
 namespace NTS.Judge.RPC;
 
-public class JudgeRpcClient : RpcClient, IJudgeRpcClient
+public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
 {
     readonly ISnapshotProcessor _snapshotProcessor;
 
@@ -17,6 +19,13 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient
     {
         _snapshotProcessor = snapshotProcessor;
         RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
+    }
+
+    public void RunAtStartup()
+    {
+        Participation.PHASE_COMPLETED_EVENT.Subscribe(SendStartCreated);
+        Participation.ELIMINATED_EVENT.Subscribe(SendParticipationEliminated);
+        Participation.RESTORED_EVENT.Subscribe(SendParticipationRestored);
     }
 
     public async Task ReceiveSnapshots(IEnumerable<Snapshot> snapshots)
