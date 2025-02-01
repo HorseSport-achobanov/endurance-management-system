@@ -1,4 +1,4 @@
-name: Build and deploy .NET Core application to Function App nts-nexus-test-2
+name: "[net8] deploy nts-nexus-test-2"
 on:
   push:
     branches:
@@ -8,7 +8,7 @@ env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Nexus/NTS.Nexus.Test/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
-  WORKING_DIRECTORY: Nexus/NTS.Nexus.Test
+  WORKING_DIRECTORY: src/Nexus/NTS.Nexus.Test
   DOTNET_CORE_VERSION_INPROC: 6.0.x
 
 jobs:
