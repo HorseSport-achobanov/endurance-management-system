@@ -53,9 +53,13 @@ jobs:
         name: functionapp
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
     
+    - name: test
+      run: ls -la Nexus/NTS.Nexus.Test/published
+
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
         publish-profile: ${{ secrets.NTS_NEXUS_TEST_44A0 }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        enable-oryx-build: true
