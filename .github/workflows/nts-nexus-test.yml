@@ -54,7 +54,7 @@ jobs:
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
     
     - name: test
-      run: ls -la Nexus/NTS.Nexus.Test/published
+      run: echo ">>>>>>>>>>>>>>>>>>>>>>>>>>" && ls -la Nexus/NTS.Nexus.Test/published
 
     - name: Deploy to Azure Function App
       uses: Azure/functions-action@v1
