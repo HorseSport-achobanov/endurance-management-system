@@ -58,5 +58,5 @@ jobs:
       uses: Azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        publish-profile: ${{ secrets.nts_nexus_test_2_9A46 }}
+        publish-profile: ${{ secrets.NTS_NEXUS_TEST_2_9A46 }}
         package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
