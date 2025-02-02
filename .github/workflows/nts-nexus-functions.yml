@@ -36,7 +36,7 @@ jobs:
     - name: Build
       run: |
         dotnet build "${{ env.FUNCTIONS_SOURCE_PATH }}" \
-        --configuration "${{ env.CONFIGURATION }}"
+        --configuration "${{ env.CONFIGURATION }}" \
         --no-restore \
         -property:SolutionDir="$CURRENT_DIR"
 
