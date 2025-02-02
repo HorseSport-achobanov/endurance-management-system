@@ -5,6 +5,9 @@ on:
     - feature/azure-function-poc
 env:
   AZURE_FUNCTIONAPP_NAME: nts-nexus-test-2
+  AZURE_RESOURCE_GROUP: NTS
+  AZURE_STORAGE_CONTAINER: azurefunctions
+  AZURE_STORAGE_ACCOUNT: ntsstoragedev
   AZURE_FUNCTIONAPP_PACKAGE_PATH: Nexus/NTS.Nexus.Test/published
   CONFIGURATION: Release
   DOTNET_CORE_VERSION: 8.0.x
@@ -54,9 +57,42 @@ jobs:
         name: functionapp
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-    - name: Deploy to Azure Function App
-      uses: Azure/functions-action@v1
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        publish-profile: ${{ secrets.NTS_NEXUS_TEST_2_9A46 }}
-        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }} 
+        creds: ${{ secrets.AZURE_SUBSCRIPTION_DEV_CREDENTIALS }}
+
+    - name: Upload to blob
+      run: |
+        az storage blob upload \
+        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
+        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
+        --name functionapp.zip \
+        --file functionapp.zip
+
+    - name: Generate SAS URL
+      id: sas
+      run: |
+        TOKEN=$(az storage blob generate-sas \
+        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
+        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
+        --name functionapp.zip \
+        --permissions r \
+        --expiry 2036-01-01 \
+        --output tsv)
+
+        FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
+        echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
+
+    - name: Configure WEBSITE_RUN_FROM_PACKAGE
+      run: |
+        az functionapp config appsettings set \
+        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+        --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
+        --settings WEBSITE_RUN_FROM_PACKAGE="$SAS_URL"
+
+    - name: Restart function
+      run: |
+        az functionapp restart \
+        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+        --name ${{ env.AZURE_FUNCTIONAPP_NAME }}
