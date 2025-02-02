@@ -97,7 +97,7 @@ jobs:
         az storage blob upload \
         --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" \
         --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
-        --sas-token $TOKEN \
+        --sas-token $SAS_TOKEN \
         --name functionapp.zip \
         --file functionapp.zip
 
