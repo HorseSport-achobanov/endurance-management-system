@@ -30,21 +30,19 @@ jobs:
       run: echo "CURRENT_DIR=$(Get-Location)\src" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Test Github env
-      run: |
-       echo ${{ env.CURRENT_DIR }} 
-       echo $CURRENT_DIR
+      run: echo $CURRENT_DIR
 
     - name: Remove local-cache NuGet source
       run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
 
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" -property:SolutionDir="src"
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" -property:SolutionDir="$CURRENT_DIR"
 
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore -property:SolutionDir="src"
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore -property:SolutionDir="$CURRENT_DIR"
 
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" -property:SolutionDir="./src"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" -property:SolutionDir="$CURRENT_DIR"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
