@@ -33,13 +33,13 @@ jobs:
       run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
 
     - name: Restore
-      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" -property:SolutionDir="$CURRENT_DIR"
+      run: dotnet restore "${{ env.WORKING_DIRECTORY }}" -property:SolutionDir="src"
 
     - name: Build
-      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore -property:SolutionDir="$CURRENT_DIR"
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restore -property:SolutionDir="src"
 
     - name: Publish
-      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" -property:SolutionDir="$CURRENT_DIR"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" -property:SolutionDir="./src"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
