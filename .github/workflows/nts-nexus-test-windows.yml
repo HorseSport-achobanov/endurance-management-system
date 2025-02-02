@@ -27,7 +27,12 @@ jobs:
 
     #Slap on top of every build: see https://github.com/Not-Endurance/not-timing-system/issues/361
     - name: Set current workding directory env
-      run: echo "CURRENT_DIR=$(pwd)/src" >> $GITHUB_ENV
+      run: echo "CURRENT_DIR=$(Get-Location)\src" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+    - name: Test Github env
+      run: |
+       echo ${{ env.CURRENT_DIR }} 
+       echo $CURRENT_DIR
 
     - name: Remove local-cache NuGet source
       run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
