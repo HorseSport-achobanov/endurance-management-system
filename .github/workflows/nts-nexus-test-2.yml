@@ -70,7 +70,7 @@ jobs:
 
     - name: Generate SAS URL
       id: sas
-      run:
+      run: |
         TOKEN=$(az storage blob generate-sas \
         --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" \
         --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
