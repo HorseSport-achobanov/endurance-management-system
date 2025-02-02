@@ -79,16 +79,18 @@ jobs:
         --expiry 2036-01-01 \
         --output tsv)
 
+        echo "SAS_TOKEN=$TOKEN" >> $GITHUB_ENV
+
     - name: Generate FULL_URL
-      run: 
+      run: |
         FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
 
     - name: Test SAS Token
-      run: "echo '>>>>> token: echo $TOKEN'"
+      run: echo $SAS_TOKEN
 
-    - name: Test GITHUB_EVN
-      run: "echo '>>>>> github env: echo $GITHUB_ENV'"
+    - name: Test SAS URL
+      run: echo $SAS_URL
 
     - name: Upload to blob
       run: |
