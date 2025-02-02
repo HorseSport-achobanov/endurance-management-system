@@ -59,9 +59,8 @@ jobs:
 
     - name: Zip function
       run: |
-        cd published
-        zip -r ../functionapp.zip .
-        cd .. && ls -la .
+        zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/
+        && ls -la .
 
     - name: Login to Azure
       uses: azure/login@v1
@@ -70,21 +69,21 @@ jobs:
 
     - name: Upload to blob
       run: |
-        az storage blob upload \
-        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
-        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
-        --name functionapp.zip \
+        az storage blob upload
+        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}
+        --container-name ${{ env.AZURE_STORAGE_CONTAINER }}
+        --name functionapp.zip
         --file functionapp.zip
 
     - name: Generate SAS URL
       id: sas
       run: |
-        TOKEN=$(az storage blob generate-sas \
-        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
-        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
-        --name functionapp.zip \
-        --permissions r \
-        --expiry 2036-01-01 \
+        TOKEN=$(az storage blob generate-sas
+        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}
+        --container-name ${{ env.AZURE_STORAGE_CONTAINER }}
+        --name functionapp.zip
+        --permissions r
+        --expiry 2036-01-01
         --output tsv)
 
         FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
@@ -92,13 +91,13 @@ jobs:
 
     - name: Configure WEBSITE_RUN_FROM_PACKAGE
       run: |
-        az functionapp config appsettings set \
-        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-        --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
+        az functionapp config appsettings set
+        --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
+        --name ${{ env.AZURE_FUNCTIONAPP_NAME }}
         --settings WEBSITE_RUN_FROM_PACKAGE="$SAS_URL"
 
     - name: Restart function
       run: |
-        az functionapp restart \
-        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+        az functionapp restart
+        --resource-group ${{ env.AZURE_RESOURCE_GROUP }}
         --name ${{ env.AZURE_FUNCTIONAPP_NAME }}
