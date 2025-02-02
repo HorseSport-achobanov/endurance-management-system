@@ -71,7 +71,7 @@ jobs:
     - name: Generate SAS URL
       id: sas
       run:
-        TOKEN=$(az storage blob generate-sas --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} --container-name ${{ env.AZURE_STORAGE_CONTAINER }} --name functionapp.zip --permissions r --expiry 2036-01-01 --output tsv)
+        TOKEN=$(az storage blob generate-sas --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" --container-name ${{ env.AZURE_STORAGE_CONTAINER }} --name functionapp.zip --permissions r --expiry 2036-01-01 --output tsv)
 
     - name: Generate FULL_URL
       run: 
