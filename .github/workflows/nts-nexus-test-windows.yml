@@ -36,19 +36,10 @@ jobs:
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}" -property:SolutionDir="$CURRENT_DIR"
 
     - name: Build
-      run: |
-        dotnet build "${{ env.WORKING_DIRECTORY }}" \
-        --configuration ${{ env.CONFIGURATION }} \
-        --no-restore
-        -property:SolutionDir="$CURRENT_DIR" \
+      run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-restor-property:SolutionDir="$CURRENT_DIR"
 
     - name: Publish
-      run: |
-        dotnet publish "${{ env.WORKING_DIRECTORY }}" \
-        --configuration ${{ env.CONFIGURATION }} \
-        --no-build \
-        --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" \
-        -property:SolutionDir="$CURRENT_DIR"
+      run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}" -property:SolutionDir="$CURRENT_DIR"
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
