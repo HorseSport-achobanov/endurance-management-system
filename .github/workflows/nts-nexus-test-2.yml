@@ -58,9 +58,7 @@ jobs:
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
     - name: Zip function
-      run: |
-        zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/
-        && ls -la .
+      run: zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
     - name: Login to Azure
       uses: azure/login@v1
