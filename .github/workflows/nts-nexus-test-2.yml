@@ -83,7 +83,7 @@ jobs:
 
     - name: Generate FULL_URL
       run: |
-        FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
+        FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$SAS_TOKEN"
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
 
     - name: Test SAS Token
