@@ -1,4 +1,4 @@
-﻿namespace NTS.Nexus.Test.Models;
+﻿namespace NTS.Nexus.Functions.Models;
 
 public record Model
 {

@@ -5,9 +5,9 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using NTS.Nexus.Test.Models;
+using NTS.Nexus.Functions.Models;
 
-namespace NTS.Nexus.Test;
+namespace NTS.Nexus.Functions;
 
 public class MongoFunctions
 {
