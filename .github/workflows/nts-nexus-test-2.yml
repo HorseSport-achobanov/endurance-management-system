@@ -99,7 +99,8 @@ jobs:
         --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
         --sas-token $SAS_TOKEN \
         --name functionapp.zip \
-        --file functionapp.zip
+        --file functionapp.zip \
+        --overwrite
 
     - name: Configure WEBSITE_RUN_FROM_PACKAGE
       run: |
