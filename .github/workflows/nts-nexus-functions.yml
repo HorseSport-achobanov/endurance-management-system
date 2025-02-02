@@ -90,15 +90,9 @@ jobs:
 
         echo "SAS_TOKEN=$TOKEN" >> $GITHUB_ENV
 
-    - name: Test SAS_TOKEN
-      run: echo "$SAS_TOKEN"
-
-    - name: Test SAS_TOKEN 2
-      run: echo "https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$SAS_TOKEN"
-
     - name: Generate FULL_URL
       run: |
-        FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$SAS_TOKEN"
+        FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/${{ env.AZURE_FUNCTIONAPP_NAME }}.zip?$SAS_TOKEN"
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
 
     - name: Upload to blob
@@ -106,7 +100,7 @@ jobs:
         az storage blob upload \
         --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" \
         --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
-        --sas-token $SAS_TOKEN \
+        --sas-token "$SAS_TOKEN" \
         --name ${{ env.AZURE_FUNCTIONAPP_NAME }}.zip \
         --file ${{ env.AZURE_FUNCTIONAPP_NAME }}.zip \
         --overwrite
