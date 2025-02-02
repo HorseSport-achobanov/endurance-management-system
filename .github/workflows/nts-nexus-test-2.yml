@@ -70,20 +70,19 @@ jobs:
 
     - name: Generate SAS URL
       id: sas
-      run: |
-        TOKEN=$(az storage blob generate-sas \
-        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
-        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
-        --name functionapp.zip \
-        --permissions r \
-        --expiry 2036-01-01 \
-        --output tsv)
+      run:
+        TOKEN=$(az storage blob generate-sas --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} --container-name ${{ env.AZURE_STORAGE_CONTAINER }} --name functionapp.zip --permissions r --expiry 2036-01-01 --output tsv)
 
+    - name: Generate FULL_URL
+      run: 
         FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
 
     - name: Test SAS Token
-      run: echo $TOKEN
+      run: "echo >>>>> token: echo $TOKEN"
+
+    - name: Test GITHUB_EVN
+      run: "echo >>>>> github env: echo $GITHUB_ENV"
 
     - name: Upload to blob
       run: |
