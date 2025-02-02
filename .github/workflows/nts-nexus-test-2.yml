@@ -60,18 +60,13 @@ jobs:
     - name: Zip function
       run: zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
+    - name: Test zip
+      run: ls -la
+
     - name: Login to Azure
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_SUBSCRIPTION_DEV_CREDENTIALS }}
-
-    - name: Upload to blob
-      run: |
-        az storage blob upload
-        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}
-        --container-name ${{ env.AZURE_STORAGE_CONTAINER }}
-        --name functionapp.zip
-        --file functionapp.zip
 
     - name: Generate SAS URL
       id: sas
@@ -86,6 +81,18 @@ jobs:
 
         FULL_URL="https://${{ env.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/azurefunctions/functionapp.zip?$TOKEN"
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
+
+    - name: Test SAS Token
+      run: echo $TOKEN
+
+    - name: Upload to blob
+      run: |
+        az storage blob upload
+        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}
+        --container-name ${{ env.AZURE_STORAGE_CONTAINER }}
+        --sas-token $TOKEN
+        --name functionapp.zip
+        --file functionapp.zip
 
     - name: Configure WEBSITE_RUN_FROM_PACKAGE
       run: |
