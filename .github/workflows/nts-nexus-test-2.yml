@@ -57,8 +57,14 @@ jobs:
         name: functionapp
         path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
+    - name: Help zip
+      run: zip --help
+
     - name: Zip function
-      run: zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+      run: |
+        cd ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        zip -r ../../../functionapp.zip .
+        cd -
 
     - name: Test zip
       run: ls -la
