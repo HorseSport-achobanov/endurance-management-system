@@ -2,7 +2,7 @@ name: "[net8] deploy nts-nexus-test-2"
 on:
   push:
     branches:
-    - zz
+    - feature/azure-function-poc
 env:
   AZURE_FUNCTIONAPP_NAME: nts-nexus-test-2
   AZURE_RESOURCE_GROUP: NTS
@@ -37,15 +37,19 @@ jobs:
 
     - name: Restore
       run: dotnet restore "${{ env.WORKING_DIRECTORY }}"
+      
     - name: Build
       run: dotnet build "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} -property:SolutionDir="$CURRENT_DIR" --no-restore
+
     - name: Publish
       run: dotnet publish "${{ env.WORKING_DIRECTORY }}" --configuration ${{ env.CONFIGURATION }} -property:SolutionDir="$CURRENT_DIR" --no-build --output "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+
     - name: Publish Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: functionapp
-        path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }} 
+        path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        include-hidden-files: true
 
   deploy:
     runs-on: ubuntu-latest
