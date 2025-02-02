@@ -71,7 +71,13 @@ jobs:
     - name: Generate SAS URL
       id: sas
       run:
-        TOKEN=$(az storage blob generate-sas --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" --container-name ${{ env.AZURE_STORAGE_CONTAINER }} --name functionapp.zip --permissions r --expiry 2036-01-01 --output tsv)
+        TOKEN=$(az storage blob generate-sas \
+        --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" \
+        --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
+        --name functionapp.zip \
+        --permissions r \
+        --expiry 2036-01-01 \
+        --output tsv)
 
     - name: Generate FULL_URL
       run: 
@@ -79,16 +85,16 @@ jobs:
         echo "SAS_URL=$FULL_URL" >> $GITHUB_ENV
 
     - name: Test SAS Token
-      run: "echo >>>>> token: echo $TOKEN"
+      run: "echo '>>>>> token: echo $TOKEN'"
 
     - name: Test GITHUB_EVN
-      run: "echo >>>>> github env: echo $GITHUB_ENV"
+      run: "echo '>>>>> github env: echo $GITHUB_ENV'"
 
     - name: Upload to blob
       run: |
         az storage blob upload \
-        --connection-string ${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }} \
-        --container-name ${{ env.AZURE_STORAGE_CONTAINER }} \
+        --connection-string "${{ secrets.AZURE_NTSSTORAGEDEV_CONNECTION_STRING }}" \
+        --container-name "${{ env.AZURE_STORAGE_CONTAINER }}" \
         --sas-token $TOKEN \
         --name functionapp.zip \
         --file functionapp.zip
@@ -96,12 +102,12 @@ jobs:
     - name: Configure WEBSITE_RUN_FROM_PACKAGE
       run: |
         az functionapp config appsettings set \
-        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-        --name ${{ env.AZURE_FUNCTIONAPP_NAME }} \
+        --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+        --name "${{ env.AZURE_FUNCTIONAPP_NAME }}" \
         --settings WEBSITE_RUN_FROM_PACKAGE="$SAS_URL"
 
     - name: Restart function
       run: |
         az functionapp restart \
-        --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-        --name ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        --resource-group "${{ env.AZURE_RESOURCE_GROUP }}" \
+        --name "${{ env.AZURE_FUNCTIONAPP_NAME }}"
