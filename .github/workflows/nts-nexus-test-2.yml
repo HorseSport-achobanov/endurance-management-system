@@ -2,7 +2,7 @@ name: "[net8] deploy nts-nexus-test-2"
 on:
   push:
     branches:
-    - feature/azure-function-poc
+    - zz
 env:
   AZURE_FUNCTIONAPP_NAME: nts-nexus-test-2
   AZURE_RESOURCE_GROUP: NTS
