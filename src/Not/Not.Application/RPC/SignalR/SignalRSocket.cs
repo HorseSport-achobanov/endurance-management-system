@@ -166,7 +166,7 @@ public class SignalRSocket : IRpcSocket, IAsyncDisposable
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                ServerConnectionInfo?.Invoke(this, "Reconecting stopped due to cancelation request");
+                ServerConnectionInfo?.Invoke(this, "Reconnecting stopped due to cancelation request");
                 _reconnectionTimer.Stop();
                 _reconnectionTimer.Dispose();
             }
