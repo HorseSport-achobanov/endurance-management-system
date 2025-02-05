@@ -1,4 +1,5 @@
-﻿using Not.Application.RPC.Clients;
+﻿using Not.Application.RPC;
+using Not.Application.RPC.Clients;
 using Not.Application.RPC.SignalR;
 using Not.Injection;
 using Not.Startup;
@@ -13,12 +14,16 @@ namespace NTS.Judge.RPC;
 public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
 {
     readonly ISnapshotProcessor _snapshotProcessor;
+    readonly IConnectionsCounter _remoteConnections;
 
-    public JudgeRpcClient(IRpcSocket socket, ISnapshotProcessor snapshotProcessor)
+    public JudgeRpcClient(IRpcSocket socket, ISnapshotProcessor snapshotProcessor, IConnectionsCounter remoteConnections)
         : base(socket)
     {
         _snapshotProcessor = snapshotProcessor;
+        _remoteConnections = remoteConnections;
         RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
+        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.IncrementConnectionCount), IncrementConnectionCount);
+        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.DecrementConnectionCount), DecrementConnectionCount);
     }
 
     public void RunAtStartup()
@@ -34,6 +39,18 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
         {
             await _snapshotProcessor.Process(snapshot);
         }
+    }
+
+    public Task IncrementConnectionCount(string connectionId)
+    {
+        _remoteConnections.AddConnection(connectionId);
+        return Task.CompletedTask;
+    }
+
+    public Task DecrementConnectionCount(string connectionId)
+    {
+        _remoteConnections.RemoveConnection(connectionId);
+        return Task.CompletedTask;
     }
 
     public async Task SendParticipationEliminated(ParticipationEliminated revoked)

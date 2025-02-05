@@ -26,6 +26,18 @@ public class WitnessRpcHub : Hub<IWitnessClientProcedures>, IEmsStartlistHubProc
         _judgeRelay = judgeRelay;
     }
 
+    public override async Task OnConnectedAsync()
+    {
+        var connectionId = base.Context.ConnectionId;
+        await _judgeRelay.Clients.All.IncrementConnectionCount(connectionId);
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        var connectionId = base.Context.ConnectionId;
+        await _judgeRelay.Clients.All.DecrementConnectionCount(connectionId);
+    }
+
     public Dictionary<int, EmsStartlist> SendStartlist()
     {
         var participations = _participations.ReadAll(x => !x.IsEliminated()).Result;
