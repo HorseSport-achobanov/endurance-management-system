@@ -5,11 +5,13 @@
 
 <MudStack Class="mt-3 mb-n3" AlignItems="AlignItems.Center" Row="false">
 	<MudInputLabel Class="mt-2 font-size-12">@Localizer.Get("Connection Status")</MudInputLabel>
-	<MudCollapse Expanded="!_isConnected">
-		<MudProgressCircular Class="mt-2" Color=" SpinnerColor" Size="Size.Medium" Indeterminate="true" />
-	</MudCollapse>
-	<MudCollapse Expanded="_isConnected">
+	@if(_isConnected)
+	{
 		<MudInputLabel Class="mt-2 font-size-12">@Localizer.Get("Connected to Server")</MudInputLabel>
-	</MudCollapse>
-	<MudInputLabel Class="mt-2 font-size-12">@Localizer.Get($"{ConnectionsCount.GetConnectionsCount()} connected devices")</MudInputLabel>
+		<MudInputLabel Class="mt-2 font-size-12">@Localizer.Get($"{ConnectionsCount.GetConnectionsCount()} connected devices")</MudInputLabel>
+	}
+	else
+	{
+		<MudProgressCircular Class="mt-2" Color=" SpinnerColor" Size="Size.Medium" Indeterminate="true" />
+	}
 </MudStack>

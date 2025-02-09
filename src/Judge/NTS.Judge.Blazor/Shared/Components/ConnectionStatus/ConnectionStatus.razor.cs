@@ -18,29 +18,32 @@ public partial class ConnectionStatus
     [Inject]
     IConnectionsCounter ConnectionsCount { get; set; } = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        await Observe(ConnectionsCount);
         _isConnected = RpcSocket.IsConnected;
         RpcSocket.Error += HandleRpcErrors;
         RpcSocket.ServerConnectionChanged += HandleServerConnectionChanged;
     }
 
-    void HandleRpcErrors(object? sender, RpcError rpcError)
+
+    async void HandleRpcErrors(object? sender, RpcError rpcError)
     {
         _rpcConnectionStatus = RpcConnectionStatus.Disconnected;
         NotifyHelper.Error(rpcError.Exception);
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
-    void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e )
+    async void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e )
     {
         _rpcConnectionStatus = e;
+        _isConnected = _rpcConnectionStatus.Equals(RpcConnectionStatus.Connected);
         if (_rpcConnectionStatus == RpcConnectionStatus.Disconnected)
         {
             SpinnerColor = Color.Error;
         } else { 
             SpinnerColor = Color.Warning;
         }
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 }

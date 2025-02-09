@@ -1,8 +1,9 @@
-﻿using Not.Injection;
+﻿using Not.Blazor.Ports;
+using Not.Injection;
 
 namespace Not.Application.RPC;
 
-public interface IConnectionsCounter : ISingleton
+public interface IConnectionsCounter : IObservableBehind
 {
     List<string> ActiveConnections { get; }
     void AddConnection(string connectionId);
