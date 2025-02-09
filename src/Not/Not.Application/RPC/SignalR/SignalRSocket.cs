@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Not.Logging;
 using Not.Serialization;
 
 namespace Not.Application.RPC.SignalR;
@@ -39,6 +40,7 @@ public class SignalRSocket : IRpcSocket, IAsyncDisposable
             ? $"RpcClient error : {exception.Message}"
             : $"RpcClient error in '{procedure}': {exception.Message}";
         Console.WriteLine(message);
+        LoggingHelper.Error(message);
         var error = new RpcError(exception, procedure, arguments);
         Error?.Invoke(this, error);
     }

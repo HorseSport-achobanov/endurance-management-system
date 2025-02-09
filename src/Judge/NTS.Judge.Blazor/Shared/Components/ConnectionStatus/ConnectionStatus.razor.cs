@@ -1,6 +1,7 @@
 ﻿using MudBlazor;
 using Not.Application.RPC;
 using Not.Application.RPC.SignalR;
+using Not.Notify;
 
 
 namespace NTS.Judge.Blazor.Shared.Components.ConnectionStatus;
@@ -19,32 +20,27 @@ public partial class ConnectionStatus
 
     protected override void OnInitialized()
     {
+        _isConnected = RpcSocket.IsConnected;
         RpcSocket.Error += HandleRpcErrors;
         RpcSocket.ServerConnectionChanged += HandleServerConnectionChanged;
-        RpcSocket.ServerConnectionInfo += HandleServerConnectionInfo;
     }
 
     void HandleRpcErrors(object? sender, RpcError rpcError)
     {
-        _isConnected = _rpcConnectionStatus.Equals(RpcConnectionStatus.Connected);
+        _rpcConnectionStatus = RpcConnectionStatus.Disconnected;
+        NotifyHelper.Error(rpcError.Exception);
+        StateHasChanged();
     }
 
     void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e )
     {
         _rpcConnectionStatus = e;
-        _isConnected = _rpcConnectionStatus.Equals(RpcConnectionStatus.Connected);
         if (_rpcConnectionStatus == RpcConnectionStatus.Disconnected)
         {
             SpinnerColor = Color.Error;
         } else { 
             SpinnerColor = Color.Warning;
         }
-        StateHasChanged();
-    }
-
-    void HandleServerConnectionInfo(object? sender, string e) 
-    {
-        _isConnected = true;
         StateHasChanged();
     }
 }
