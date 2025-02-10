@@ -2,7 +2,7 @@
 
 namespace NTS.Application.RPC;
 
-public interface IWitnessClientProcedures 
+public interface ILegacyWitnessClientProcedures 
     : IEmsParticipantsClientProcedures,
         IEmsParticipantsHubProcedures,
         IEmsStartlistClientProcedures

@@ -5,16 +5,16 @@ using NTS.ACL.RPC;
 using NTS.Application.RPC;
 using NTS.Domain.Core.Objects.Payloads;
 using NTS.ACL.Factories;
-using NTS.Judge.MAUI.Server.RPC.Procedures;
+
 using Not.Safe;
 
 namespace NTS.Judge.MAUI.Server.RPC;
 
 public class JudgeRpcHub : Hub<IJudgeClientProcedures>, IJudgeHubProcedures
 {
-    readonly IHubContext<WitnessRpcHub, IWitnessClientProcedures> _witnessRelay;
+    readonly IHubContext<WitnessRpcHub, ILegacyWitnessClientProcedures> _witnessRelay;
 
-    public JudgeRpcHub(IHubContext<WitnessRpcHub, IWitnessClientProcedures> witnessRelay)
+    public JudgeRpcHub(IHubContext<WitnessRpcHub, ILegacyWitnessClientProcedures> witnessRelay)
     {
         _witnessRelay = witnessRelay;
     }
