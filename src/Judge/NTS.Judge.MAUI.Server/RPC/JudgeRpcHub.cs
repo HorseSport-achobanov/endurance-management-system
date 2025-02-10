@@ -6,6 +6,7 @@ using NTS.Application.RPC;
 using NTS.Domain.Core.Objects.Payloads;
 using NTS.ACL.Factories;
 using NTS.Judge.MAUI.Server.RPC.Procedures;
+using Not.Safe;
 
 namespace NTS.Judge.MAUI.Server.RPC;
 
@@ -20,19 +21,37 @@ public class JudgeRpcHub : Hub<IJudgeClientProcedures>, IJudgeHubProcedures
 
     public async Task SendParticipationEliminated(ParticipationEliminated revoked)
     {
+        Task action() => SafeSendParticipationEliminated(revoked);
+        await SafeHelper.Run(action);
+    }
+
+    public async Task SendParticipationRestored(ParticipationRestored restored)
+    {
+        Task action() => SafeSendParticipationRestored(restored);
+        await SafeHelper.Run(action);
+    }
+
+    public async Task SendStartCreated(PhaseCompleted phaseCompleted)
+    {
+        Task action() => SafeSendStartCreated(phaseCompleted);
+        await SafeHelper.Run(action);
+    }
+
+    public async Task SafeSendParticipationEliminated(ParticipationEliminated revoked)
+    {
         var emsParticipation = ParticipationFactory.CreateEms(revoked.Participation);
         var entry = new EmsParticipantEntry(emsParticipation);
         await _witnessRelay.Clients.All.ReceiveEntryUpdate(entry, EmsCollectionAction.Remove);
     }
 
-    public async Task SendParticipationRestored(ParticipationRestored restored)
+    public async Task SafeSendParticipationRestored(ParticipationRestored restored)
     {
         var emsParticipation = ParticipationFactory.CreateEms(restored.Participation);
         var entry = new EmsParticipantEntry(emsParticipation);
         await _witnessRelay.Clients.All.ReceiveEntryUpdate(entry, EmsCollectionAction.AddOrUpdate);
     }
 
-    public async Task SendStartCreated(PhaseCompleted phaseCompleted)
+    public async Task SafeSendStartCreated(PhaseCompleted phaseCompleted)
     {
         var emsParticipation = ParticipationFactory.CreateEms(phaseCompleted.Participation);
         var entry = new EmsStartlistEntry(emsParticipation);
