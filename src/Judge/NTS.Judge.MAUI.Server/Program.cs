@@ -4,8 +4,15 @@ using NTS.Judge.MAUI.Server.RPC;
 using NTS.Judge.MAUI.Server;
 using Microsoft.AspNetCore.SignalR;
 using Not.Startup;
+using Not.Process;
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
+
+if(args != null)
+{
+    var parentPid = int.Parse(args[0]);
+    ProcessHelper.MonitorParentProcess(parentPid);
+}
 
 builder.Services.ConfigureHub();
 builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
