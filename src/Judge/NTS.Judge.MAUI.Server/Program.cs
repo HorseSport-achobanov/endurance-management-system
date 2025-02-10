@@ -5,18 +5,30 @@ using NTS.Judge.MAUI.Server;
 using Microsoft.AspNetCore.SignalR;
 using Not.Startup;
 using Not.Process;
+using Not.Logging.Builder;
+using Not.Filesystem;
+using Not.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if(args != null)
+if (args.Length > 0)
 {
+
     var parentPid = int.Parse(args[0]);
     ProcessHelper.MonitorParentProcess(parentPid);
 }
 
 builder.Services.ConfigureHub();
-builder.Logging.AddFilter("Microsoft.AspNetCore.SignalR", LogLevel.Debug);
-builder.Logging.AddFilter("Microsoft.AspNetCore.Http.Connections", LogLevel.Debug);
+
+builder.ConfigureLogging().AddFilesystemLogger(logFileConfig =>
+{
+    logFileConfig.Path = FileContextHelper.GetAppDirectory();
+    logFileConfig.Name = ContextHelper.ConfigureApplicationName("NTS.Judge.Server");
+
+});
+
+
+
 var app = builder.Build();
 
 app.Urls.Add("http://*:11337");
