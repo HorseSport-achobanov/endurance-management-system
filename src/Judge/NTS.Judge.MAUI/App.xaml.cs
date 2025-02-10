@@ -11,7 +11,7 @@ public partial class App : Microsoft.Maui.Controls.Application
 
         MainPage = new MainPage();
 
-        ContextHelper.SetApplicationName("nts");
+        ContextHelper.ConfigureApplicationName("nts");
 
         foreach (var initializer in initializers)
         {
