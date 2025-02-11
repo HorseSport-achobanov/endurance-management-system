@@ -6,7 +6,7 @@ namespace NTS.Judge.Core.Behinds.Adapters;
 
 public class RemoteConnectionsBehind : ObservableBehind, IConnectionsCounter
 {
-    public List<string> ActiveConnections { get; } = [];
+    List<string> ActiveConnections { get; } = [];
 
     protected override Task<bool> PerformInitialization(params IEnumerable<object> arguments)
     {
