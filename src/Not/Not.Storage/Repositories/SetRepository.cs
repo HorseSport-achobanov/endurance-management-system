@@ -8,9 +8,8 @@ public abstract class SetRepository<T, TState> : ReadonlySetRepository<T, TState
     where T : AggregateRoot
     where TState : class, ISetState<T>, new()
 {
-    public SetRepository(IStore<TState> store) : base(store)
-    {
-    }
+    public SetRepository(IStore<TState> store)
+        : base(store) { }
 
     public async Task Create(T entity)
     {

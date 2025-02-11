@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using NTS.ACL.Entities;
 using NTS.ACL.Enums;
+using NTS.ACL.Factories;
 using NTS.ACL.RPC;
 using NTS.Application.RPC;
 using NTS.Domain.Core.Objects.Payloads;
@@ -10,7 +11,7 @@ using Not.Safe;
 
 namespace NTS.Judge.MAUI.Server.RPC;
 
-public class JudgeRpcHub : Hub<IJudgeClientProcedures>, IJudgeHubProcedures
+public class JudgeRpcHub : Hub<IJudgeClientProcedures> //, IJudgeHubProcedures
 {
     readonly IHubContext<WitnessRpcHub, ILegacyWitnessClientProcedures> _witnessRelay;
 

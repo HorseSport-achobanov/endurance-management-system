@@ -1,36 +1,57 @@
-﻿using Not.Application.RPC.Clients;
+﻿using Microsoft.AspNetCore.SignalR.Client;
+using Not.Application.RPC.Clients;
 using Not.Application.RPC.SignalR;
 using Not.Tests.RPC;
 using NTS.ACL.Entities;
 using NTS.ACL.Enums;
 using NTS.ACL.RPC;
 using NTS.ACL.RPC.Procedures;
+using Xunit.Abstractions;
 
 namespace NTS.Judge.Tests;
 
-public class WitnessTestClient : RpcClient, IEmsParticipantsClientProcedures, IEmsStartlistClientProcedures, ITestRpcClient
+public class WitnessTestClient
+    : RpcClient,
+        IEmsParticipantsClientProcedures,
+        IEmsStartlistClientProcedures,
+        ITestRpcClient
 {
-    ITestRpcClient _thisTestClient;
+    private readonly IRpcSocket _socket;
+    private readonly ITestOutputHelper _testOutputHelper;
 
-    public WitnessTestClient(IRpcSocket socket) : base(socket)
+    public WitnessTestClient(IRpcSocket socket, ITestOutputHelper testOutputHelper)
+        : base(socket)
     {
-        RegisterClientProcedure<EmsStartlistEntry, EmsCollectionAction>(nameof(ReceiveEntry), ReceiveEntry);
-        RegisterClientProcedure<EmsParticipantEntry, EmsCollectionAction>(nameof(ReceiveEntryUpdate), ReceiveEntryUpdate);
-        _thisTestClient = this;
+        _socket = socket;
+        _testOutputHelper = testOutputHelper;
+        RegisterClientProcedure<EmsStartlistEntry, EmsCollectionAction>(
+            nameof(ReceiveEntry),
+            ReceiveEntry
+        );
+        RegisterClientProcedure<EmsParticipantEntry, EmsCollectionAction>(
+            nameof(ReceiveEntryUpdate),
+            ReceiveEntryUpdate
+        );
     }
 
-    List<string> ITestRpcClient.InvokedMethods { get; } = [];
+    public int Id { get; }
+    public List<string> InvokedMethods { get; } = [];
+
+    public void Dispose()
+    {
+        // Reset the invoked methods after each test
+        InvokedMethods.Clear();
+    }
 
     public Task ReceiveEntry(EmsStartlistEntry entry, EmsCollectionAction action)
     {
-        _thisTestClient.InvokedMethods.Add(nameof(ReceiveEntry));
+        InvokedMethods.Add(nameof(ReceiveEntry));
         return Task.CompletedTask;
     }
 
     public Task ReceiveEntryUpdate(EmsParticipantEntry entry, EmsCollectionAction action)
     {
-        _thisTestClient.InvokedMethods.Add(nameof(ReceiveEntryUpdate));
+        InvokedMethods.Add(nameof(ReceiveEntryUpdate));
         return Task.CompletedTask;
     }
 }
-

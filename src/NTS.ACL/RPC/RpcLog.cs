@@ -9,9 +9,8 @@ public struct RpcLog
         DateTime = DateTimeOffset.Now;
     }
 
-    public RpcLog(string clientId, Exception exception) : this(clientId, exception.Message + Environment.NewLine + exception.StackTrace)
-    {
-    }
+    public RpcLog(string clientId, Exception exception)
+        : this(clientId, exception.Message + Environment.NewLine + exception.StackTrace) { }
 
     public string ClientId { get; set; }
     public string Message { get; set; }

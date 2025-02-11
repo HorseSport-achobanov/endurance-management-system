@@ -1,6 +1,6 @@
 ﻿using NTS.ACL.Entities.Laps;
-using NTS.Domain.Core.Aggregates;
 using NTS.ACL.Models;
+using NTS.Domain.Core.Aggregates;
 
 namespace NTS.ACL.Factories;
 

@@ -1,7 +1,7 @@
 ﻿using NTS.ACL.Entities.Competitions;
+using NTS.ACL.Models;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Enums;
-using NTS.ACL.Models;
 
 namespace NTS.ACL.Factories;
 

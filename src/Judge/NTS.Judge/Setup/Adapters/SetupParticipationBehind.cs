@@ -7,9 +7,9 @@ using NTS.Judge.Core.Behinds;
 
 namespace NTS.Judge.Setup.Adapters;
 
-public class ParticipationBehind : CrudBehind<Participation, ParticipationFormModel>
+public class SetupParticipationBehind : CrudBehind<Participation, ParticipationFormModel>
 {
-    public ParticipationBehind(
+    public SetupParticipationBehind(
         IRepository<Participation> participations,
         CompetitionParentContext parentContext
     )

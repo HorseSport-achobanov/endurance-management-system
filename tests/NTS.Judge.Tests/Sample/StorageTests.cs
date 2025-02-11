@@ -5,34 +5,38 @@ using NTS.Domain.Objects;
 using NTS.Domain.Setup.Aggregates;
 using NTS.Judge.Blazor.Setup.EnduranceEvents;
 using NTS.Storage.Setup;
+using Xunit.Abstractions;
 
 namespace NTS.Judge.Tests.Sample;
 
 public class StorageTests : JudgeIntegrationTest
 {
-    public StorageTests() : base(nameof(SetupState))
-    {
-    }
+    public StorageTests(ITestOutputHelper testOutputHelper)
+        : base(nameof(SetupState), testOutputHelper) { }
 
     [Fact]
     public async Task Test1()
     {
         await Seed();
 
-        var enduranceEventBehind = Provider.GetRequiredService<ICreateBehind<EnduranceEventFormModel>>();
+        var enduranceEventBehind = Provider.GetRequiredService<
+            ICreateBehind<EnduranceEventFormModel>
+        >();
 
         var country = new Country("testIso", "testNf", "Test");
-        var enduranceEvent = new EnduranceEventTestModel
-        {
-            Country = country,
-            Place = "Sofia",
-        };
+        var enduranceEvent = new EnduranceEventTestModel { Country = country, Place = "Sofia" };
 
         await enduranceEventBehind.Create(enduranceEvent);
 
         var expectedState = new SetupState
         {
-            EnduranceEvent = EnduranceEvent.Update(enduranceEvent.Id, enduranceEvent.Place, enduranceEvent.Country, [], [])
+            EnduranceEvent = EnduranceEvent.Update(
+                enduranceEvent.Id,
+                enduranceEvent.Place,
+                enduranceEvent.Country,
+                [],
+                []
+            ),
         };
 
         await AssertStateEquals(expectedState.ToJson());
@@ -44,20 +48,20 @@ public class StorageTests : JudgeIntegrationTest
         await Seed();
 
         var expected = """
-        {
-            "EnduranceEvent": {
-            "Place": "Sofia",
-            "Country": {
-                "IsoCode": "testIso",
-                "NfCode": "testNf",
-                "Name": "Test"
-            },
-            "Officials": [],
-            "Competitions": [],
-            "Id": 319178201
+            {
+                "EnduranceEvent": {
+                "Place": "Sofia",
+                "Country": {
+                    "IsoCode": "testIso",
+                    "NfCode": "testNf",
+                    "Name": "Test"
+                },
+                "Officials": [],
+                "Competitions": [],
+                "Id": 319178201
+                }
             }
-        }
-        """;
+            """;
 
         await AssertStateEquals(expected);
     }

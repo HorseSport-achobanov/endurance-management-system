@@ -1,6 +1,10 @@
-﻿using NTS.Domain.Objects;
+﻿using System.Globalization;
+using NTS.Domain.Enums;
+using NTS.Domain.Objects;
 using NTS.Judge.Core;
+using NTS.Judge.Tests.Helpers;
 using NTS.Storage.Core;
+using Xunit.Abstractions;
 
 namespace NTS.Judge.Tests.Sample;
 
@@ -8,28 +12,29 @@ namespace NTS.Judge.Tests.Sample;
 public class RpcIntegrationTest : JudgeIntegrationTest
 {
     private readonly WitnessRpcFixture _witnessFIxture;
+    private readonly ITestOutputHelper _testOutputHelper;
 
-    public RpcIntegrationTest(WitnessRpcFixture witnessFixture) : base(nameof(CoreState))
+    public RpcIntegrationTest(WitnessRpcFixture witnessFixture, ITestOutputHelper testOutputHelper)
+        : base(nameof(CoreState), testOutputHelper)
     {
         _witnessFIxture = witnessFixture;
+        _testOutputHelper = testOutputHelper;
     }
-
 
     [Fact]
     public async Task TestEliminatedOnRpcClient()
     {
         await Seed();
 
-        var now = DateTimeOffset.Now;
-        var time = new DateTimeOffset(now.Year, now.Month, now.Day, 22, 17, 31, now.Offset);
-        var timestamp = new Timestamp(time);
-        var snapshot = new Snapshot(55, Domain.Enums.SnapshotType.Vet, Domain.Enums.SnapshotMethod.Manual, timestamp);
+        var timestamp = TimestampHelper.Create(hour: 18, minute: 10);
+        var snapshot = new Snapshot(1337, SnapshotType.Vet, SnapshotMethod.Manual, timestamp);
 
-        var processor = await GetBehind<ISnapshotProcessor>();
+        var processor = await GetBehind<ISnapshotProcessor>(_testOutputHelper.WriteLine);
 
         await AssertRpcInvoked(
-            _witnessFIxture, 
+            _witnessFIxture,
             () => processor.Process(snapshot),
-            nameof(WitnessTestClient.ReceiveEntryUpdate));
+            nameof(WitnessTestClient.ReceiveEntryUpdate)
+        );
     }
 }

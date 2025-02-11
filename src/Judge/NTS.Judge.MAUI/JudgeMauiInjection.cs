@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Not.Injection;
+using Not.Logging.Builder;
 using Not.MAUI.Logging;
 using NTS.Judge.Blazor;
-using Not.Logging.Builder;
-using Not.Injection;
 using NTS.Storage;
 
 namespace NTS.Judge.MAUI;
@@ -16,12 +16,12 @@ public static class JudgeMauiInjection
         builder.Logging.AddDebug();
         builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
-        builder.Services
-            .ConfigureStorage()
+        builder
+            .Services.ConfigureStorage()
             .ConfigureJudge()
             .ConfigureJudgeBlazor(builder.Configuration)
             .RegisterConventionalServices();
-        
+
         builder.ConfigureLogging().AddFilesystemLogger();
 
         return builder;

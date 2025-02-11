@@ -7,7 +7,7 @@ public record Timestamp : DomainObject, IComparable<Timestamp>
 {
     public static Timestamp Now()
     {
-        return new Timestamp(DateTimeOffset.Now);
+        return new Timestamp(DateTimeOffset.UtcNow);
     }
 
     public static Timestamp? Create(DateTimeOffset? dateTime)
@@ -16,7 +16,7 @@ public record Timestamp : DomainObject, IComparable<Timestamp>
         {
             return null;
         }
-        return new Timestamp(dateTime.Value);
+        return new Timestamp(dateTime.Value.ToUniversalTime());
     }
 
     public static Timestamp Copy(Timestamp timestamp)
@@ -76,14 +76,17 @@ public record Timestamp : DomainObject, IComparable<Timestamp>
         _stamp = timestamp._stamp;
     }
 
-    public Timestamp(DateTime dateTime)
+    public Timestamp(DateTimeOffset dateTime)
     {
-        _stamp = dateTime;
-    }
-
-    public Timestamp(DateTimeOffset stamp)
-    {
-        _stamp = stamp;
+        _stamp = new DateTimeOffset(
+            1337,
+            1,
+            3,
+            dateTime.Hour,
+            dateTime.Minute,
+            dateTime.Second,
+            dateTime.Offset
+        ).ToUniversalTime();
     }
 
     [JsonProperty]

@@ -2,7 +2,7 @@
 
 namespace Not.Tests.RPC;
 
-public interface ITestRpcClient : IRpcClient
+public interface ITestRpcClient : IRpcClient, IDisposable
 {
     List<string> InvokedMethods { get; }
 }

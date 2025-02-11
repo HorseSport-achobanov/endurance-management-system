@@ -1,7 +1,10 @@
-﻿namespace Not.Events;
+﻿using System;
+
+namespace Not.Events;
 
 public abstract class EventBase<T>
 {
+    readonly object _lock = new();
     readonly Dictionary<Guid, T> _handlersByGuid = [];
 
     protected abstract void AddHandler(T handler);
@@ -9,10 +12,13 @@ public abstract class EventBase<T>
 
     protected Guid InternalSubscribe(T handler)
     {
-        var guid = Guid.NewGuid();
-        _handlersByGuid.Add(guid, handler);
-        AddHandler(handler);
-        return guid;
+        lock (_lock)
+        {
+            var guid = Guid.NewGuid();
+            _handlersByGuid.Add(guid, handler);
+            AddHandler(handler);
+            return guid;
+        }
     }
 
     protected Task ReturnCompletedTask(Action action)
@@ -27,20 +33,28 @@ public abstract class EventBase<T>
         return Task.CompletedTask;
     }
 
-    public void Unsubscribe(Guid guid)
+    public void Unsubscribe(Guid key)
     {
-        if (!_handlersByGuid.TryGetValue(guid, out var handler))
+        lock (_lock)
         {
-            return;
+            if (!_handlersByGuid.TryGetValue(key, out var handler))
+            {
+                return;
+            }
+            _handlersByGuid.Remove(key);
+            RemoveHandler(handler);
         }
-        RemoveHandler(handler);
     }
 
     public void UnsubscribeAll()
     {
-        foreach (var handler in _handlersByGuid.Values)
+        lock (_lock)
         {
-            RemoveHandler(handler);
+            foreach (var (key, handler) in _handlersByGuid)
+            {
+                _handlersByGuid.Remove(key);
+                RemoveHandler(handler);
+            }
         }
     }
 }

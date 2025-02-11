@@ -38,7 +38,8 @@ public abstract class PrintableComponent : NComponent, IDisposable
 
     public void Dispose()
     {
-        _toggleEvent.UnsubscribeAll();
+        // Figure out how to unsubscribe at instance level. Consider ditching static events?
+        //_toggleEvent.UnsubscribeAll();
     }
 
     void InvokeToggle()

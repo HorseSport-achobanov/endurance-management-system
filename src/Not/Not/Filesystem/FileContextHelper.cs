@@ -27,7 +27,10 @@ public static class FileContextHelper
         return Path.Combine(basePath, subdirectory);
     }
 
-    public static Func<IServiceProvider, object?, FileContext> CreateFileContextFactory(Action<FileContext>? configure, string defaultDirectoryName)
+    public static Func<IServiceProvider, object?, FileContext> CreateFileContextFactory(
+        Action<FileContext>? configure,
+        string defaultDirectoryName
+    )
     {
         return configure == null
             ? CreateFileContextFactory(defaultDirectoryName)
@@ -38,15 +41,14 @@ public static class FileContextHelper
 
     static Func<IServiceProvider, object?, FileContext> CreateFileContextFactory(string directory)
     {
-        var context = new FileContext
-        {
-            Path = GetAppDirectory(directory)
-        };
+        var context = new FileContext { Path = GetAppDirectory(directory) };
         (context as INConfig).Validate();
         return (_, __) => context;
     }
 
-    static Func<IServiceProvider, object?, FileContext> CreateFileContextFactory(Action<FileContext> configure)
+    static Func<IServiceProvider, object?, FileContext> CreateFileContextFactory(
+        Action<FileContext> configure
+    )
     {
         var context = new FileContext();
         configure(context);

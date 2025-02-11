@@ -14,7 +14,6 @@ public static class JudgeInjection
     /// <returns></returns>
     public static IServiceCollection ConfigureJudge(this IServiceCollection services)
     {
-        return services
-            .AddSingleton<IStartupInitializer, StaticOption>();
+        return services.AddSingleton<IStartupInitializer, StaticOption>();
     }
 }

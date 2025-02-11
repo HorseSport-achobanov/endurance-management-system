@@ -1,11 +1,11 @@
-name: Test Judge
+name: "[net8] Test Judge"
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, reopened, synchronize, ready_for_review]
 
 jobs:
-  build:
+  test-judge:
     runs-on: ubuntu-latest
 
     env:
@@ -30,10 +30,6 @@ jobs:
       - name: Remove local-cache NuGet source
         run: dotnet nuget remove source "local-cache" --configfile ./src/NuGet.config
 
-      # Necessary because SolutionDir parameter, used in Directory.Build.props, which is currently only used for static analyzers
-    #   - name: Remove Directory.Build.props
-    #     run: rm -f src/Directory.Build.props
-
       # Step 3: Restore dependencies for the entire solution/project
       - name: Restore
         run: dotnet restore ${{ env.TEST_PROJECT_PATH }}
@@ -42,5 +38,5 @@ jobs:
       - name: Build
         run: dotnet build ${{ env.TEST_PROJECT_PATH }} -property:SolutionDir="$CURRENT_DIR" --configuration Release --no-restore
 
-      - name: Test1
+      - name: Test
         run: dotnet test ${{ env.TEST_PROJECT_PATH }} -property:SolutionDir="$CURRENT_DIR" --configuration Release --no-build

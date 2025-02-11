@@ -14,7 +14,10 @@ public static class StoreServiceCollectionExtensions
     /// <param name="services"></param>
     /// <param name="configure">Custom configuration</param>
     /// <returns></returns>
-    public static IServiceCollection AddJsonFileStore(this IServiceCollection services, Action<FileContext>? configure = null)
+    public static IServiceCollection AddJsonFileStore(
+        this IServiceCollection services,
+        Action<FileContext>? configure = null
+    )
     {
         var factory = FileContextHelper.CreateFileContextFactory(configure, "stores");
         services.AddKeyedSingleton<IFileContext, FileContext>(StoreConstants.DATA_KEY, factory);
@@ -28,10 +31,16 @@ public static class StoreServiceCollectionExtensions
     /// <param name="services"></param>
     /// <param name="configure">Custom configuration</param>
     /// <returns></returns>
-    public static IServiceCollection AddStaticOptionsStore(this IServiceCollection services, Action<FileContext>? configure = null)
+    public static IServiceCollection AddStaticOptionsStore(
+        this IServiceCollection services,
+        Action<FileContext>? configure = null
+    )
     {
         var factory = FileContextHelper.CreateFileContextFactory(configure, "Resources");
-        services.AddKeyedSingleton<IFileContext, FileContext>(StoreConstants.STATIC_OPTIONS_STORE_KEY, factory);
+        services.AddKeyedSingleton<IFileContext, FileContext>(
+            StoreConstants.STATIC_OPTIONS_STORE_KEY,
+            factory
+        );
         services.AddSingleton(
             typeof(IStaticOptionsProvider<>),
             typeof(JsonStaticOptionsProvider<>)

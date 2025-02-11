@@ -18,7 +18,10 @@ public static class InjectionServiceCollectionExtensions
         return RegisterConventionalServices(services, assemblies);
     }
 
-    static IServiceCollection RegisterConventionalServices(IServiceCollection services, IEnumerable<Assembly> assemblies)
+    static IServiceCollection RegisterConventionalServices(
+        IServiceCollection services,
+        IEnumerable<Assembly> assemblies
+    )
     {
         assemblies = assemblies.Distinct().OrderBy(x => x.FullName).ToList();
         var classes = assemblies

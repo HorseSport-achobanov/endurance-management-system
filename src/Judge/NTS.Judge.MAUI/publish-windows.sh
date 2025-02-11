@@ -3,7 +3,8 @@ build=Release
 
 dotnet publish \
  -f "$target" \
- --self-contained
+ --self-contained \
+ -property:SolutionDir="$nts/not-timing-system/src"
 
 if [ $? -eq 1 ]; then
     echo 'publish failed'

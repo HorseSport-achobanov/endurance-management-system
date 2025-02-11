@@ -15,9 +15,8 @@ public abstract class RootRepository<T, TState> : ReadonlyRootRepository<T, TSta
     where T : AggregateRoot
     where TState : class, ITreeState<T>, new()
 {
-    public RootRepository(IStore<TState> store) : base(store)
-    {
-    }
+    public RootRepository(IStore<TState> store)
+        : base(store) { }
 
     public async Task Create(T entity)
     {

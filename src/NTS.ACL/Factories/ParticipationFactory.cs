@@ -1,10 +1,10 @@
 ﻿using NTS.ACL.Entities.LapRecords;
 using NTS.ACL.Entities.Participants;
 using NTS.ACL.Entities.Results;
+using NTS.ACL.Models;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Core.Aggregates.Participations;
 using NTS.Domain.Objects;
-using NTS.ACL.Models;
 using EmsCompetition = NTS.ACL.Entities.Competitions.EmsCompetition;
 using EmsParticipation = NTS.ACL.Entities.Participations.EmsParticipation;
 
@@ -79,7 +79,7 @@ public class ParticipationFactory
 
             var record = emsParticipation.Participant.LapRecords.FirstOrDefault(x => x.Lap == lap);
 
-            Phase phase =   null;
+            Phase phase = null;
             if (record != null)
             {
                 Timestamp? startTimestamp = null;
