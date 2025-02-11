@@ -22,8 +22,8 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
         _snapshotProcessor = snapshotProcessor;
         _remoteConnections = remoteConnections;
         RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.IncrementConnectionCount), IncrementConnectionCount);
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.DecrementConnectionCount), DecrementConnectionCount);
+        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteConnectionId), ReceiveRemoteConnectionId);
+        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteDisconnectId), ReceiveRemoteDisconnectId);
     }
 
     public void RunAtStartup()
@@ -41,13 +41,13 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
         }
     }
 
-    public Task IncrementConnectionCount(string connectionId)
+    public Task ReceiveRemoteConnectionId(string connectionId)
     {
         _remoteConnections.AddConnection(connectionId);
         return Task.CompletedTask;
     }
 
-    public Task DecrementConnectionCount(string connectionId)
+    public Task ReceiveRemoteDisconnectId(string connectionId)
     {
         _remoteConnections.RemoveConnection(connectionId);
         return Task.CompletedTask;

@@ -33,7 +33,7 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
         try
         {
             var connectionId = base.Context.ConnectionId;
-            await _judgeRelay.Clients.All.IncrementConnectionCount(connectionId);
+            await _judgeRelay.Clients.All.ReceiveRemoteConnectionId(connectionId);
 
         }
         catch (HubException ex) 
@@ -47,7 +47,7 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
         try 
         { 
             var connectionId = base.Context.ConnectionId;
-            await _judgeRelay.Clients.All.DecrementConnectionCount(connectionId);
+            await _judgeRelay.Clients.All.ReceiveRemoteDisconnectId(connectionId);
         }
         catch (HubException ex) 
         {
