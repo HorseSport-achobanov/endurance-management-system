@@ -60,12 +60,12 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
 
     public async Task SendParticipationRestored(ParticipationRestored restored)
     {
-        await InvokeHubProcedure(nameof(IJudgeHubProcedures), restored);
+        await InvokeHubProcedure(nameof(IJudgeHubProcedures.SendParticipationRestored), restored);
     }
 
     public async Task SendStartCreated(PhaseCompleted phaseCompleted)
     {
-        await InvokeHubProcedure(nameof(IJudgeHubProcedures), phaseCompleted);
+        await InvokeHubProcedure(nameof(IJudgeHubProcedures.SendStartCreated), phaseCompleted);
     }
 }
 

@@ -10,7 +10,7 @@ using Not.Safe;
 
 namespace NTS.Judge.MAUI.Server.RPC;
 
-public class JudgeRpcHub : Hub<IJudgeClientProcedures> //, IJudgeHubProcedures
+public class JudgeRpcHub : Hub<IJudgeClientProcedures> , IJudgeHubProcedures
 {
     readonly IHubContext<WitnessRpcHub, ILegacyWitnessClientProcedures> _witnessRelay;
 
