@@ -3,11 +3,19 @@ using NTS.Application;
 using NTS.Judge.MAUI.Server;
 using NTS.Judge.MAUI.Server.ACL;
 using NTS.Judge.MAUI.Server.RPC;
+using Not.Process;
 using Not.Logging.Builder;
 using Not.Filesystem;
 using Not.Contexts;
 
-var builder = WebApplication.CreateBuilder();
+var builder = WebApplication.CreateBuilder(args);
+
+if (args.Length > 0)
+{
+
+    var parentPid = int.Parse(args[0]);
+    ProcessHelper.MonitorParentProcess(parentPid);
+}
 
 builder.Services.ConfigureHub();
 
