@@ -31,15 +31,20 @@ public static class MauiProgram
     {
         try
         {
-            var parentPid = Process.GetCurrentProcess().Id;
             var currentDirectory = Directory.GetCurrentDirectory();
             var info = new ProcessStartInfo
             {
                 FileName = Path.Combine(currentDirectory, "NTS.Judge.MAUI.Server.exe"),
-                Arguments = parentPid.ToString()
             };
 
             var hubProcess = Process.Start(info);
+            AppDomain.CurrentDomain.ProcessExit += (s, e) =>
+            {
+                if (hubProcess != null && !hubProcess.HasExited)
+                {
+                    hubProcess.CloseMainWindow();
+                }
+            };
         }
         catch (Exception ex)
         {
