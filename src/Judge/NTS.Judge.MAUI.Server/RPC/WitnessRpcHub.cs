@@ -10,8 +10,6 @@ using NTS.Application.RPC;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Objects;
 using NTS.ACL.RPC.Procedures;
-using Not.Logging;
-using Not.Exceptions;
 
 namespace NTS.Judge.MAUI.Server.RPC;
 
@@ -34,16 +32,8 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
 
     public override async Task OnConnectedAsync()
     {
-        try
-        {
-            var connectionId = base.Context.ConnectionId;
-            await _judgeRelay.Clients.All.ReceiveRemoteConnectionId(connectionId);
-
-        }
-        catch (HubException ex) 
-        {
-            LoggingHelper.Error(ex.Message);
-        }
+        var connectionId = base.Context.ConnectionId;
+        await _judgeRelay.Clients.All.IncrementConnectionCount(connectionId);
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
@@ -51,7 +41,7 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
         try 
         { 
             var connectionId = base.Context.ConnectionId;
-            await _judgeRelay.Clients.All.ReceiveRemoteDisconnectId(connectionId);
+            await _judgeRelay.Clients.All.DecrementConnectionCount(connectionId);
         }
         catch (HubException ex) 
         {
@@ -60,52 +50,6 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
     }
 
     public Dictionary<int, EmsStartlist> SendStartlist()
-    {
-        Dictionary<int, EmsStartlist> action() => SafeSendStartlist();
-        var result = SafeHelper.Run(action);
-        GuardHelper.ThrowIfDefault(result);
-        return result;
-    }
-
-    public async Task<EmsParticipantsPayload> SendParticipants()
-    {
-        Task<EmsParticipantsPayload> action() => SafeSendParticipants();
-        var result = await SafeHelper.Run(action);
-        GuardHelper.ThrowIfDefault(result);
-        return result;
-    }
-
-    public async Task ReceiveWitnessEvent(
-        IEnumerable<EmsParticipantEntry> entries,
-        EmsWitnessEventType type
-    )
-    {
-        // Task.Run because Event handling in dotnet seems to hold the current thread. Further investigation is needed
-        // but what was happening is that Witness apps didn't receive rpc response until the handling thread was finished
-        // which is mostly visible when it causes a validation (popup) which blocks the thread until closed in Prism/WPF
-        await SafeHelper.RunAsync(async () =>
-        {
-            var snapshots = new List<Snapshot>();
-            foreach (var entry in entries)
-            {
-                var participation = await _participations.Read(x =>
-                    x.Combination.Number == int.Parse(entry.Number)
-                );
-                if (participation == null)
-                {
-                    continue;
-                }
-                var isFinal = participation
-                    .Phases.Take(participation.Phases.Count - 1)
-                    .All(x => x.IsComplete());
-                var snapshot = SnapshotFactory.Create(entry, type, isFinal);
-                snapshots.Add(snapshot);
-            }
-            await _judgeRelay.Clients.All.ReceiveSnapshots(snapshots);
-        });
-    }
-
-    public Dictionary<int, EmsStartlist> SafeSendStartlist()
     {
         var participations = _participations.ReadAll(x => !x.IsEliminated()).Result;
         var emsParticipations = participations.Select(ParticipationFactory.CreateEms);
@@ -156,7 +100,7 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
         return startlists;
     }
 
-    public async Task<EmsParticipantsPayload> SafeSendParticipants()
+    public async Task<EmsParticipantsPayload> SendParticipants()
     {
         var participants = await _participations
             .ReadAll(x => !x.IsEliminated() && !x.IsComplete()).Select(ParticipantEntryFactory.Create);
@@ -166,5 +110,35 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
             Participants = participants.ToList(),
             EventId = enduranceEvent?.Id ?? 0,
         };
+    }
+
+    public async Task ReceiveWitnessEvent(
+        IEnumerable<EmsParticipantEntry> entries,
+        EmsWitnessEventType type
+    )
+    {
+        // Task.Run because Event hadling in dotnet seems to hold the current thread. Further investigation is needed
+        // but what was happening is that Witness apps didn't receive rpc response untill the handling thread was finished
+        // which is motly visible when it causes a validation (popup) which blocks the thread until closed in Prism/WPF
+        await SafeHelper.RunAsync(async () =>
+        {
+            var snapshots = new List<Snapshot>();
+            foreach (var entry in entries)
+            {
+                var participation = await _participations.Read(x =>
+                    x.Combination.Number == int.Parse(entry.Number)
+                );
+                if (participation == null)
+                {
+                    continue;
+                }
+                var isFinal = participation
+                    .Phases.Take(participation.Phases.Count - 1)
+                    .All(x => x.IsComplete());
+                var snapshot = SnapshotFactory.Create(entry, type, isFinal);
+                snapshots.Add(snapshot);
+            }
+            await _judgeRelay.Clients.All.ReceiveSnapshots(snapshots);
+        });
     }
 }
