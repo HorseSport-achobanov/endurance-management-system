@@ -13,7 +13,8 @@ public static class HubInjection
     public static IServiceCollection ConfigureHub(this IServiceCollection services)
     {
         services
-            .AddSignalR(options => {
+            .AddSignalR(options =>
+            {
                 options.EnableDetailedErrors = true;
                 options.AddFilter<ExceptionHandlingHubFilter>();
             })

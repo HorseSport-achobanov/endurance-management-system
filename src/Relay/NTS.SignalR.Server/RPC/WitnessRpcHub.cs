@@ -6,10 +6,10 @@ using NTS.ACL.Entities;
 using NTS.ACL.Entities.EMS;
 using NTS.ACL.Factories;
 using NTS.ACL.RPC;
+using NTS.ACL.RPC.Procedures;
 using NTS.Application.RPC;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Objects;
-using NTS.ACL.RPC.Procedures;
 
 namespace NTS.SignalR.Server.RPC;
 
@@ -96,7 +96,8 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
     public async Task<EmsParticipantsPayload> SendParticipants()
     {
         var participants = await _participations
-            .ReadAll(x => !x.IsEliminated() && !x.IsComplete()).Select(ParticipantEntryFactory.Create);
+            .ReadAll(x => !x.IsEliminated() && !x.IsComplete())
+            .Select(ParticipantEntryFactory.Create);
         var enduranceEvent = await _events.Read(0);
         return new EmsParticipantsPayload
         {

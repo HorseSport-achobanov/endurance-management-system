@@ -3,7 +3,6 @@ using Not.Application.RPC;
 using Not.Application.RPC.SignalR;
 using Not.Notify;
 
-
 namespace NTS.Judge.Blazor.Shared.Components.ConnectionStatus;
 
 public partial class ConnectionStatus
@@ -26,7 +25,6 @@ public partial class ConnectionStatus
         RpcSocket.ServerConnectionChanged += HandleServerConnectionChanged;
     }
 
-
     async void HandleRpcErrors(object? sender, RpcError rpcError)
     {
         _rpcConnectionStatus = RpcConnectionStatus.Disconnected;
@@ -34,14 +32,16 @@ public partial class ConnectionStatus
         await InvokeAsync(StateHasChanged);
     }
 
-    async void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e )
+    async void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e)
     {
         _rpcConnectionStatus = e;
         _isConnected = _rpcConnectionStatus.Equals(RpcConnectionStatus.Connected);
         if (_rpcConnectionStatus == RpcConnectionStatus.Disconnected)
         {
             SpinnerColor = Color.Error;
-        } else { 
+        }
+        else
+        {
             SpinnerColor = Color.Warning;
         }
         await InvokeAsync(StateHasChanged);

@@ -8,7 +8,7 @@ using NTS.Domain.Core.Objects.Payloads;
 
 namespace NTS.SignalR.Server.RPC;
 
-public class JudgeRpcHub : Hub<IJudgeClientProcedures> , IJudgeHubProcedures
+public class JudgeRpcHub : Hub<IJudgeClientProcedures>, IJudgeHubProcedures
 {
     readonly IHubContext<WitnessRpcHub, ILegacyWitnessClientProcedures> _witnessRelay;
 

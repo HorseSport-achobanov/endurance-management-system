@@ -13,11 +13,13 @@ public class ProcessService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (!stoppingToken.IsCancellationRequested) 
+        while (!stoppingToken.IsCancellationRequested)
         {
             if (!ProcessExists(_context.ParentProcessID))
             {
-                Console.WriteLine($"Parent process {_context.ParentProcessID} has exited. Shutting down child process...");
+                Console.WriteLine(
+                    $"Parent process {_context.ParentProcessID} has exited. Shutting down child process..."
+                );
                 Environment.Exit(0);
             }
             await Task.Delay(2000);

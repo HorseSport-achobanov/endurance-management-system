@@ -7,7 +7,9 @@ namespace NTS.SignalR.Server.Middleware;
 public class ExceptionHandlingHubFilter : IHubFilter
 {
     public async ValueTask<object?> InvokeMethodAsync(
-    HubInvocationContext invocationContext, Func<HubInvocationContext, ValueTask<object?>> next)
+        HubInvocationContext invocationContext,
+        Func<HubInvocationContext, ValueTask<object?>> next
+    )
     {
         Console.WriteLine($"Calling hub method '{invocationContext.HubMethodName}'");
         try
@@ -35,7 +37,10 @@ public class ExceptionHandlingHubFilter : IHubFilter
     }
 
     public Task OnDisconnectedAsync(
-        HubLifetimeContext context, Exception? exception, Func<HubLifetimeContext, Exception?, Task> next)
+        HubLifetimeContext context,
+        Exception? exception,
+        Func<HubLifetimeContext, Exception?, Task> next
+    )
     {
         try
         {
@@ -52,8 +57,8 @@ public class ExceptionHandlingHubFilter : IHubFilter
     {
         NotifyHelper.Error(hubException);
         var logMessage =
-                    $"An error {hubException.Message} was thrown calling {methodName} " +
-                    $"at {hubException.Source} with trace \n {hubException.StackTrace}";
+            $"An error {hubException.Message} was thrown calling {methodName} "
+            + $"at {hubException.Source} with trace \n {hubException.StackTrace}";
         LoggingHelper.Error(logMessage);
     }
 }

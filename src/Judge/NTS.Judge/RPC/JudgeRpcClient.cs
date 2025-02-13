@@ -16,14 +16,27 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
     readonly ISnapshotProcessor _snapshotProcessor;
     readonly IConnectionsCounter _remoteConnections;
 
-    public JudgeRpcClient(IRpcSocket socket, ISnapshotProcessor snapshotProcessor, IConnectionsCounter remoteConnections)
+    public JudgeRpcClient(
+        IRpcSocket socket,
+        ISnapshotProcessor snapshotProcessor,
+        IConnectionsCounter remoteConnections
+    )
         : base(socket)
     {
         _snapshotProcessor = snapshotProcessor;
         _remoteConnections = remoteConnections;
-        RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteConnectionId), ReceiveRemoteConnectionId);
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteDisconnectId), ReceiveRemoteDisconnectId);
+        RegisterClientProcedure<IEnumerable<Snapshot>>(
+            nameof(IJudgeClientProcedures.ReceiveSnapshots),
+            ReceiveSnapshots
+        );
+        RegisterClientProcedure<string>(
+            nameof(IJudgeClientProcedures.ReceiveRemoteConnectionId),
+            ReceiveRemoteConnectionId
+        );
+        RegisterClientProcedure<string>(
+            nameof(IJudgeClientProcedures.ReceiveRemoteDisconnectId),
+            ReceiveRemoteDisconnectId
+        );
     }
 
     public void RunAtStartup()
@@ -69,6 +82,8 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
     }
 }
 
-public interface IJudgeRpcClient : IJudgeHubProcedures, IJudgeClientProcedures, IRpcClient, ITransient
-{
-}
+public interface IJudgeRpcClient
+    : IJudgeHubProcedures,
+        IJudgeClientProcedures,
+        IRpcClient,
+        ITransient { }

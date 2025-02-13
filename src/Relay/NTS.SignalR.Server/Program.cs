@@ -1,12 +1,12 @@
-﻿using Not.Startup;
+﻿using Not.Contexts;
+using Not.Filesystem;
+using Not.Logging.Builder;
+using Not.ProcessUtility;
+using Not.Startup;
 using NTS.Application;
 using NTS.SignalR.Server;
 using NTS.SignalR.Server.ACL;
 using NTS.SignalR.Server.RPC;
-using Not.ProcessUtility;
-using Not.Logging.Builder;
-using Not.Filesystem;
-using Not.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,12 +22,13 @@ if (args.Length > 0)
     builder.Services.AddHostedService<ProcessService>();
 }
 
-builder.ConfigureLogging().AddFilesystemLogger(logFileConfig =>
-{
-    logFileConfig.Path = FileContextHelper.GetAppDirectory();
-    logFileConfig.Name = ContextHelper.ConfigureApplicationName("NTS.Judge.Server");
-
-});
+builder
+    .ConfigureLogging()
+    .AddFilesystemLogger(logFileConfig =>
+    {
+        logFileConfig.Path = FileContextHelper.GetAppDirectory();
+        logFileConfig.Name = ContextHelper.ConfigureApplicationName("NTS.Judge.Server");
+    });
 
 var app = builder.Build();
 

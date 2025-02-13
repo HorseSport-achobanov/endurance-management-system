@@ -2,6 +2,4 @@
 
 namespace NTS.Application.RPC;
 
-public interface IHubProcedures
-{
-}
+public interface IHubProcedures { }

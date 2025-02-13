@@ -36,7 +36,7 @@ public static class MauiProgram
             var info = new ProcessStartInfo
             {
                 FileName = Path.Combine(currentDirectory, "NTS.SignalR.Server.exe"),
-                Arguments = parentPid.ToString()
+                Arguments = parentPid.ToString(),
             };
 
             var hubProcess = Process.Start(info);
