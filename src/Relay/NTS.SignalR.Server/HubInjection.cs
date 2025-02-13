@@ -3,10 +3,10 @@ using Not.Injection;
 using Not.Localization;
 using Not.Serialization;
 using NTS.ACL.Handshake;
-using NTS.Judge.MAUI.Server.Middleware;
+using NTS.SignalR.Server.Middleware;
 using NTS.Storage;
 
-namespace NTS.Judge.MAUI.Server;
+namespace NTS.SignalR.Server;
 
 public static class HubInjection
 {

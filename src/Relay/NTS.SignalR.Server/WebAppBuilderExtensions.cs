@@ -2,7 +2,7 @@
 using Not.Logging;
 using Serilog;
 
-namespace NTS.Judge.MAUI.Server;
+namespace NTS.SignalR.Server;
 
 public static class WebAppBuilderExtensions
 {

@@ -2,7 +2,7 @@
 using Not.Logging;
 using Not.Notify;
 
-namespace NTS.Judge.MAUI.Server.Middleware;
+namespace NTS.SignalR.Server.Middleware;
 
 public class ExceptionHandlingHubFilter : IHubFilter
 {

@@ -1,8 +1,8 @@
 ﻿using Not.Startup;
 using NTS.Application;
-using NTS.Judge.MAUI.Server;
-using NTS.Judge.MAUI.Server.ACL;
-using NTS.Judge.MAUI.Server.RPC;
+using NTS.SignalR.Server;
+using NTS.SignalR.Server.ACL;
+using NTS.SignalR.Server.RPC;
 using Not.ProcessUtility;
 using Not.Logging.Builder;
 using Not.Filesystem;

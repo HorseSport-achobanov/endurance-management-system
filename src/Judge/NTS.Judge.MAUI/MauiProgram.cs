@@ -35,7 +35,7 @@ public static class MauiProgram
             var currentDirectory = Directory.GetCurrentDirectory();
             var info = new ProcessStartInfo
             {
-                FileName = Path.Combine(currentDirectory, "NTS.Judge.MAUI.Server.exe"),
+                FileName = Path.Combine(currentDirectory, "NTS.SignalR.Server.exe"),
                 Arguments = parentPid.ToString()
             };
 

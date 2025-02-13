@@ -11,7 +11,7 @@ using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Objects;
 using NTS.ACL.RPC.Procedures;
 
-namespace NTS.Judge.MAUI.Server.RPC;
+namespace NTS.SignalR.Server.RPC;
 
 public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistHubProcedures
 {
