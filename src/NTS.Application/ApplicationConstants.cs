@@ -1,4 +1,4 @@
-﻿using NTS.Judge.MAUI.Server.ACL;
+﻿using NTS.SignalR.Server.ACL;
 
 namespace NTS.Application;
 

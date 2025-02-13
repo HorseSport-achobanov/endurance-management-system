@@ -3,7 +3,7 @@ using System.Net.Sockets;
 using System.Text;
 using Not.Injection;
 using NTS.ACL.Handshake;
-using static NTS.Judge.MAUI.Server.ACL.Constants;
+using static NTS.SignalR.Server.ACL.Constants;
 
 namespace Core.Application.Services;
 

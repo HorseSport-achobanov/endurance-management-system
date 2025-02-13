@@ -1,4 +1,4 @@
-﻿namespace NTS.Judge.MAUI.Server.ACL;
+﻿namespace NTS.SignalR.Server.ACL;
 
 public class Constants
 {

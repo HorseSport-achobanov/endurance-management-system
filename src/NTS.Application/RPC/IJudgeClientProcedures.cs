@@ -4,5 +4,7 @@ namespace NTS.Application.RPC;
 
 public interface IJudgeClientProcedures
 {
-    Task Process(IEnumerable<Snapshot> snapshots);
+    Task ReceiveSnapshots(IEnumerable<Snapshot> snapshots);
+    Task ReceiveRemoteConnectionId(string connectionId);
+    Task ReceiveRemoteDisconnectId(string connectionId);
 }

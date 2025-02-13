@@ -15,7 +15,7 @@ public static class FileContextHelper
         _applicationName = applicatioName;
     }
 
-    public static string GetAppDirectory(string subdirectory)
+    public static string GetAppDirectory(string subdirectory = "")
     {
         var basePath =
 #if DEBUG
