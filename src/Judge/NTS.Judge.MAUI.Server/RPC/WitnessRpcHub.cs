@@ -33,20 +33,13 @@ public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistH
     public override async Task OnConnectedAsync()
     {
         var connectionId = base.Context.ConnectionId;
-        await _judgeRelay.Clients.All.IncrementConnectionCount(connectionId);
+        await _judgeRelay.Clients.All.ReceiveRemoteConnectionId(connectionId);
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        try 
-        { 
-            var connectionId = base.Context.ConnectionId;
-            await _judgeRelay.Clients.All.DecrementConnectionCount(connectionId);
-        }
-        catch (HubException ex) 
-        {
-            LoggingHelper.Error(ex.Message);
-        }
+        var connectionId = base.Context.ConnectionId;
+        await _judgeRelay.Clients.All.ReceiveRemoteDisconnectId(connectionId);
     }
 
     public Dictionary<int, EmsStartlist> SendStartlist()
