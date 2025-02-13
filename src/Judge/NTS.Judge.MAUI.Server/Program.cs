@@ -3,21 +3,24 @@ using NTS.Application;
 using NTS.Judge.MAUI.Server;
 using NTS.Judge.MAUI.Server.ACL;
 using NTS.Judge.MAUI.Server.RPC;
-using Not.Process;
+using Not.ProcessUtility;
 using Not.Logging.Builder;
 using Not.Filesystem;
 using Not.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.ConfigureHub();
+
 if (args.Length > 0)
 {
-
-    var parentPid = int.Parse(args[0]);
-    ProcessHelper.MonitorParentProcess(parentPid);
+    builder.Services.AddSingleton<ProcessServiceContext>(provider =>
+    {
+        var parentProcessID = args[0];
+        return new ProcessServiceContext(parentProcessID);
+    });
+    builder.Services.AddHostedService<ProcessService>();
 }
-
-builder.Services.ConfigureHub();
 
 builder.ConfigureLogging().AddFilesystemLogger(logFileConfig =>
 {
@@ -26,17 +29,12 @@ builder.ConfigureLogging().AddFilesystemLogger(logFileConfig =>
 
 });
 
-
-
 var app = builder.Build();
 
 app.Urls.Add("http://*:11337");
 
 app.MapHub<JudgeRpcHub>(ApplicationConstants.JUDGE_HUB);
 app.MapHub<WitnessRpcHub>(Constants.RPC_ENDPOINT); // TODO: change to NtsApplicationConstants.WITNESS_HUB
-
-//var a = app.Services.GetRequiredService<IHubContext<WitnessRpcHub, IEmsClientProcedures>>();
-//Console.WriteLine(a.Groups);
 
 foreach (var initializer in app.Services.GetServices<IStartupInitializer>())
 {
