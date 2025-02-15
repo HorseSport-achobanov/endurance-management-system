@@ -19,11 +19,14 @@ public class MongoFunctions
     }
 
     [Function("mongo-post")]
-    public async Task<IActionResult> Post([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest request)
+    public async Task<IActionResult> Post(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest request
+    )
     {
         try
         {
-            var connectionString = "mongodb://127.0.0.1:C2y6yDjf5%2FR%2Bob0N8A7Cgv30VRDJIWEHLM%2B4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw%2FJw%3D%3D@127.0.0.1:8081/admin?ssl=true";
+            var connectionString =
+                "mongodb://127.0.0.1:C2y6yDjf5%2FR%2Bob0N8A7Cgv30VRDJIWEHLM%2B4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw%2FJw%3D%3D@127.0.0.1:8081/admin?ssl=true";
             var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
             settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             var mongoClient = new MongoClient(settings);
@@ -48,18 +51,24 @@ public class MongoFunctions
     }
 
     [Function("mongo-get")]
-    public async Task<IActionResult> Get([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest request)
+    public async Task<IActionResult> Get(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest request
+    )
     {
         try
         {
             _logger.LogInformation($"Mongo GET processing '{request}'");
 
-            var connectionString = @"mongodb://nts-mongo-dev:t4aX66O4VMIvO4vnLvMUEP3sVt8tfcAM651094Xl1WRzv1VsQY9qI48RTb7elIW7kEIt8AcJHfLPACDbrAqJEg==@nts-mongo-dev.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@nts-mongo-dev@";
+            var connectionString =
+                @"mongodb://nts-mongo-dev:t4aX66O4VMIvO4vnLvMUEP3sVt8tfcAM651094Xl1WRzv1VsQY9qI48RTb7elIW7kEIt8AcJHfLPACDbrAqJEg==@nts-mongo-dev.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@nts-mongo-dev@";
             var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
             settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
             var mongoClient = new MongoClient(settings);
 
-            var results = await mongoClient.GetDatabase("test").GetCollection<Model>("models").FindAsync(x => true);
+            var results = await mongoClient
+                .GetDatabase("test")
+                .GetCollection<Model>("models")
+                .FindAsync(x => true);
             var models = await results.ToListAsync();
 
             _logger.LogInformation("Mongo GET function completed processing");
