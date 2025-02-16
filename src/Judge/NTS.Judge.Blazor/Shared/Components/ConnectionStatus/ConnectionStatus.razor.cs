@@ -7,43 +7,25 @@ namespace NTS.Judge.Blazor.Shared.Components.ConnectionStatus;
 
 public partial class ConnectionStatus
 {
-    RpcConnectionStatus _rpcConnectionStatus;
-    bool _isConnected;
-    Color SpinnerColor { get; set; } = Color.Error;
-
     [Inject]
-    IRpcSocket RpcSocket { get; set; } = default!;
+    IConnectionsBehind ConnectionsBehind { get; set; } = default!;
 
-    [Inject]
-    IConnectionsBehind ConnectionsCount { get; set; } = default!;
+    Color SpinnerColor => GetSpinnerColor();
 
     protected override async Task OnInitializedAsync()
     {
-        await Observe(ConnectionsCount);
-        _isConnected = RpcSocket.IsConnected;
-        RpcSocket.Error += HandleRpcErrors;
-        RpcSocket.ServerConnectionChanged += HandleServerConnectionChanged;
+        await Observe(ConnectionsBehind);
     }
 
-    async void HandleRpcErrors(object? sender, RpcError rpcError)
+    Color GetSpinnerColor()
     {
-        _rpcConnectionStatus = RpcConnectionStatus.Disconnected;
-        NotifyHelper.Error(rpcError.Exception);
-        await InvokeAsync(StateHasChanged);
-    }
-
-    async void HandleServerConnectionChanged(object? sender, RpcConnectionStatus e)
-    {
-        _rpcConnectionStatus = e;
-        _isConnected = _rpcConnectionStatus.Equals(RpcConnectionStatus.Connected);
-        if (_rpcConnectionStatus == RpcConnectionStatus.Disconnected)
+        if (ConnectionsBehind.ServerConnectionStatus == RpcConnectionStatus.Disconnected)
         {
-            SpinnerColor = Color.Error;
+            return Color.Error;
         }
         else
         {
-            SpinnerColor = Color.Warning;
+            return Color.Warning;
         }
-        await InvokeAsync(StateHasChanged);
     }
 }

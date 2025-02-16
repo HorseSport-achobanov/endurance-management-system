@@ -52,13 +52,13 @@ public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
 
     public Task ReceiveRemoteConnectionId(string connectionId)
     {
-        _remoteConnections.AddConnection(connectionId);
+        _remoteConnections.Add(connectionId);
         return Task.CompletedTask;
     }
 
     public Task ReceiveRemoteDisconnectId(string connectionId)
     {
-        _remoteConnections.RemoveConnection(connectionId);
+        _remoteConnections.Remove(connectionId);
         return Task.CompletedTask;
     }
 
