@@ -3,7 +3,7 @@ using Not.Injection;
 
 namespace Not.Application.RPC;
 
-public interface IConnectionsCounter : IObservableBehind
+public interface IConnectionsBehind : IObservableBehind
 {
     void AddConnection(string connectionId);
     void RemoveConnection(string connectionId);

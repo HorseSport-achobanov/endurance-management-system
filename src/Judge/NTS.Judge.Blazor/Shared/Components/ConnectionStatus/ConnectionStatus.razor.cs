@@ -15,7 +15,7 @@ public partial class ConnectionStatus
     IRpcSocket RpcSocket { get; set; } = default!;
 
     [Inject]
-    IConnectionsCounter ConnectionsCount { get; set; } = default!;
+    IConnectionsBehind ConnectionsCount { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {

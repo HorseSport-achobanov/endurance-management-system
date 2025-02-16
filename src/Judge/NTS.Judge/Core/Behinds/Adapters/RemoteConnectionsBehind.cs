@@ -4,7 +4,7 @@ using Not.Blazor.Ports;
 
 namespace NTS.Judge.Core.Behinds.Adapters;
 
-public class RemoteConnectionsBehind : ObservableBehind, IConnectionsCounter
+public class RemoteConnectionsBehind : ObservableBehind, IConnectionsBehind
 {
     List<string> ActiveConnections { get; } = [];
 

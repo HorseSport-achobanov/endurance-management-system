@@ -14,13 +14,9 @@ namespace NTS.Judge.RPC;
 public class JudgeRpcClient : RpcClient, IJudgeRpcClient, IStartupInitializer
 {
     readonly ISnapshotProcessor _snapshotProcessor;
-    readonly IConnectionsCounter _remoteConnections;
+    readonly IConnectionsBehind _remoteConnections;
 
-    public JudgeRpcClient(
-        IRpcSocket socket,
-        ISnapshotProcessor snapshotProcessor,
-        IConnectionsCounter remoteConnections
-    )
+    public JudgeRpcClient(IRpcSocket socket, ISnapshotProcessor snapshotProcessor, IConnectionsCounter remoteConnections)
         : base(socket)
     {
         _snapshotProcessor = snapshotProcessor;
