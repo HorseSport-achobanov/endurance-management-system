@@ -3,8 +3,7 @@
 namespace NTS.Application.RPC;
 
 public interface IJudgeClientProcedures
+    : IParticipationClientProcedures,
+    IConnectionsClientProcedures
 {
-    Task ReceiveSnapshots(IEnumerable<Snapshot> snapshots);
-    Task ReceiveRemoteConnectionId(string connectionId);
-    Task ReceiveRemoteDisconnectId(string connectionId);
 }

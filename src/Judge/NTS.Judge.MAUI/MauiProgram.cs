@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Not.Application.RPC.Clients;
 using NTS.Judge.RPC;
 using static NTS.Judge.MAUI.Constants;
 
@@ -24,8 +25,10 @@ public static class MauiProgram
     static void ConnectToHub(IServiceProvider serviceProvider)
     {
         StartHub();
-        var judgeClient = serviceProvider.GetRequiredService<IJudgeRpcClient>();
-        judgeClient.Connect();
+        var connectionsClient = serviceProvider.GetRequiredService<IConnectionsRpcClient>();
+        var participationClient = serviceProvider.GetRequiredService<IParticipationRpcClient>();    
+        connectionsClient.Connect();
+        participationClient.Connect();
     }
 
     static void StartHub()
