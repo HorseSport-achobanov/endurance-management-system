@@ -1,25 +1,19 @@
-﻿using Not.Exceptions;
+﻿using System.Diagnostics;
 
 namespace Not.Contexts;
 
 public static class ContextHelper
 {
-    public static void SetApplicationName(string applicatioName)
+    public static string ConfigureApplicationName(string applicationName)
     {
-        _applicationName = applicatioName;
+        _applicationName = applicationName;
+        return _applicationName;
     }
 
-    public static string GetAppDirectory(string subdirectory)
+    public static string ConfigureApplicationName()
     {
-        GuardHelper.ThrowIfDefault(_applicationName);
-
-        var basePath =
-#if DEBUG
-            $"C:\\tmp\\{_applicationName}";
-#else
-        Directory.GetCurrentDirectory();
-#endif
-        return Path.Combine(basePath, subdirectory);
+        var currentProcess = Process.GetCurrentProcess();
+        return _applicationName = currentProcess.ProcessName;
     }
 
     static string? _applicationName;

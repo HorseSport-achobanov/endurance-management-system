@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using Not.Application.RPC.Clients;
 using NTS.Judge.RPC;
+using static NTS.Judge.MAUI.Constants;
 
 namespace NTS.Judge.MAUI;
 
@@ -23,28 +25,25 @@ public static class MauiProgram
     static void ConnectToHub(IServiceProvider serviceProvider)
     {
         StartHub();
-        var judgeClient = serviceProvider.GetRequiredService<IJudgeRpcClient>();
-        judgeClient.Connect();
+        var connectionsClient = serviceProvider.GetRequiredService<IConnectionsRpcClient>();
+        var participationClient = serviceProvider.GetRequiredService<IParticipationRpcClient>();
+        connectionsClient.Connect();
+        participationClient.Connect();
     }
 
     static void StartHub()
     {
         try
         {
+            var parentPid = Process.GetCurrentProcess().Id;
             var currentDirectory = Directory.GetCurrentDirectory();
             var info = new ProcessStartInfo
             {
-                FileName = Path.Combine(currentDirectory, "NTS.Judge.MAUI.Server.exe"),
+                FileName = Path.Combine(currentDirectory, RELAY_APP_EXE),
+                Arguments = parentPid.ToString(),
             };
 
             var hubProcess = Process.Start(info);
-            AppDomain.CurrentDomain.ProcessExit += (s, e) =>
-            {
-                if (hubProcess != null && !hubProcess.HasExited)
-                {
-                    hubProcess.CloseMainWindow();
-                }
-            };
         }
         catch (Exception ex)
         {
