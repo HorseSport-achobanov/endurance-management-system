@@ -10,7 +10,7 @@ public static class ContextHelper
         return _applicationName;
     }
 
-    public static string ConfigureApplicationName() 
+    public static string ConfigureApplicationName()
     {
         var currentProcess = Process.GetCurrentProcess();
         return _applicationName = currentProcess.ProcessName;

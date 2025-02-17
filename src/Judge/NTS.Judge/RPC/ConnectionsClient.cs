@@ -4,7 +4,6 @@ using Not.Application.RPC.SignalR;
 using Not.Injection;
 using NTS.Application.RPC;
 
-
 namespace NTS.Judge.RPC;
 
 public class ConnectionsClient : RpcClient, IConnectionsRpcClient
@@ -15,8 +14,14 @@ public class ConnectionsClient : RpcClient, IConnectionsRpcClient
         : base(socket)
     {
         _remoteConnections = remoteConnections;
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteConnectionId), ReceiveRemoteConnectionId);
-        RegisterClientProcedure<string>(nameof(IJudgeClientProcedures.ReceiveRemoteDisconnectId), ReceiveRemoteDisconnectId);
+        RegisterClientProcedure<string>(
+            nameof(IJudgeClientProcedures.ReceiveRemoteConnectionId),
+            ReceiveRemoteConnectionId
+        );
+        RegisterClientProcedure<string>(
+            nameof(IJudgeClientProcedures.ReceiveRemoteDisconnectId),
+            ReceiveRemoteDisconnectId
+        );
     }
 
     public Task ReceiveRemoteConnectionId(string connectionId)
@@ -32,6 +37,4 @@ public class ConnectionsClient : RpcClient, IConnectionsRpcClient
     }
 }
 
-public interface IConnectionsRpcClient : IConnectionsClientProcedures, IRpcClient, ITransient
-{
-}
+public interface IConnectionsRpcClient : IConnectionsClientProcedures, IRpcClient, ITransient { }

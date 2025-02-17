@@ -2,7 +2,7 @@
 
 namespace NTS.Application.RPC;
 
-public  interface IParticipationClientProcedures
+public interface IParticipationClientProcedures
 {
     Task ReceiveSnapshots(IEnumerable<Snapshot> snapshots);
 }

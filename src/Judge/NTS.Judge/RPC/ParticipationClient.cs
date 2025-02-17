@@ -16,12 +16,19 @@ public class ParticipationClient : RpcClient, IParticipationRpcClient, IStartupI
     readonly ISnapshotProcessor _snapshotProcessor;
     readonly IConnectionsBehind _remoteConnections;
 
-    public ParticipationClient(IRpcSocket socket, ISnapshotProcessor snapshotProcessor, IConnectionsBehind remoteConnections)
+    public ParticipationClient(
+        IRpcSocket socket,
+        ISnapshotProcessor snapshotProcessor,
+        IConnectionsBehind remoteConnections
+    )
         : base(socket)
     {
         _snapshotProcessor = snapshotProcessor;
         _remoteConnections = remoteConnections;
-        RegisterClientProcedure<IEnumerable<Snapshot>>(nameof(IJudgeClientProcedures.ReceiveSnapshots), ReceiveSnapshots);
+        RegisterClientProcedure<IEnumerable<Snapshot>>(
+            nameof(IJudgeClientProcedures.ReceiveSnapshots),
+            ReceiveSnapshots
+        );
     }
 
     public void RunAtStartup()
@@ -67,6 +74,7 @@ public class ParticipationClient : RpcClient, IParticipationRpcClient, IStartupI
     }
 }
 
-public interface IParticipationRpcClient : IParticipationClientProcedures, IRpcClient, ITransient
-{
-}
+public interface IParticipationRpcClient
+    : IParticipationClientProcedures,
+        IRpcClient,
+        ITransient { }

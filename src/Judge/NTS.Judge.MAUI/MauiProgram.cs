@@ -26,7 +26,7 @@ public static class MauiProgram
     {
         StartHub();
         var connectionsClient = serviceProvider.GetRequiredService<IConnectionsRpcClient>();
-        var participationClient = serviceProvider.GetRequiredService<IParticipationRpcClient>();    
+        var participationClient = serviceProvider.GetRequiredService<IParticipationRpcClient>();
         connectionsClient.Connect();
         participationClient.Connect();
     }
@@ -40,7 +40,7 @@ public static class MauiProgram
             var info = new ProcessStartInfo
             {
                 FileName = Path.Combine(currentDirectory, RELAY_APP_EXE),
-                Arguments = parentPid.ToString()
+                Arguments = parentPid.ToString(),
             };
 
             var hubProcess = Process.Start(info);
