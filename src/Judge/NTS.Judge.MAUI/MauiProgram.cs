@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using NTS.Judge.RPC;
+using static NTS.Judge.MAUI.Constants;
 
 namespace NTS.Judge.MAUI;
 
@@ -35,8 +36,8 @@ public static class MauiProgram
             var currentDirectory = Directory.GetCurrentDirectory();
             var info = new ProcessStartInfo
             {
-                FileName = Path.Combine(currentDirectory, "NTS.SignalR.Server.exe"),
-                Arguments = parentPid.ToString(),
+                FileName = Path.Combine(currentDirectory, RELAY_APP_EXE),
+                Arguments = parentPid.ToString()
             };
 
             var hubProcess = Process.Start(info);
