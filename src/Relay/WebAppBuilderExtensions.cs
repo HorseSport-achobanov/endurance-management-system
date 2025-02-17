@@ -2,7 +2,7 @@
 using Not.Logging.Builder;
 using Serilog;
 
-namespace NTS.SignalR.Server;
+namespace NTS.Relay;
 
 public static class WebAppBuilderExtensions
 {

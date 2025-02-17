@@ -3,10 +3,10 @@ using Not.Injection;
 using Not.Localization;
 using Not.Serialization;
 using NTS.ACL.Handshake;
-using NTS.SignalR.Server.Middleware;
+using NTS.Relay.Middleware;
 using NTS.Storage;
 
-namespace NTS.SignalR.Server;
+namespace NTS.Relay;
 
 public static class HubInjection
 {

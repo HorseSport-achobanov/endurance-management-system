@@ -1,4 +1,4 @@
-﻿namespace NTS.SignalR.Server.ACL;
+﻿namespace NTS.Relay.ACL;
 
 public class Constants
 {

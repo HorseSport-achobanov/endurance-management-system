@@ -11,7 +11,7 @@ using NTS.Application.RPC;
 using NTS.Domain.Core.Aggregates;
 using NTS.Domain.Objects;
 
-namespace NTS.SignalR.Server.RPC;
+namespace NTS.Relay.RPC;
 
 public class WitnessRpcHub : Hub<ILegacyWitnessClientProcedures>, IEmsStartlistHubProcedures
 {

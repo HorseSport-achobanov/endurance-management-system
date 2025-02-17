@@ -6,7 +6,7 @@ using NTS.ACL.RPC;
 using NTS.Application.RPC;
 using NTS.Domain.Core.Objects.Payloads;
 
-namespace NTS.SignalR.Server.RPC;
+namespace NTS.Relay.RPC;
 
 public class JudgeRpcHub : Hub<IJudgeClientProcedures>, IJudgeHubProcedures
 {

@@ -1,4 +1,4 @@
-﻿using NTS.SignalR.Server.ACL;
+﻿using NTS.Relay.ACL;
 
 namespace NTS.Application;
 

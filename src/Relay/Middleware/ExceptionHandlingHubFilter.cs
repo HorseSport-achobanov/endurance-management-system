@@ -2,7 +2,7 @@
 using Not.Logging;
 using Not.Notify;
 
-namespace NTS.SignalR.Server.Middleware;
+namespace NTS.Relay.Middleware;
 
 public class ExceptionHandlingHubFilter : IHubFilter
 {

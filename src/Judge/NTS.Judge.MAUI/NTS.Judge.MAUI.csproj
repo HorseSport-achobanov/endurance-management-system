@@ -67,7 +67,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Not\Not.MAUI\Not.MAUI.csproj" />
     <ProjectReference Include="..\..\NTS.Storage\NTS.Storage.csproj" />
-    <ProjectReference Include="..\..\\Relay\NTS.SignalR.Server\NTS.SignalR.Server.csproj" />
+    <ProjectReference Include="..\..\Relay\NTS.Relay.csproj" />
     <ProjectReference Include="..\NTS.Judge\NTS.Judge.csproj" />
     <ProjectReference Include="..\NTS.Judge.Blazor\NTS.Judge.Blazor.csproj" />
   </ItemGroup>
