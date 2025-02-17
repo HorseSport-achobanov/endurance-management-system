@@ -4,8 +4,8 @@ public class ProcessServiceContext
 {
     public ProcessServiceContext(string parentPID)
     {
-        ParentProcessID = int.Parse(parentPID);
+       ParentProcessId = int.Parse(parentPID);
     }
 
-    public int ParentProcessID { get; set; }
+    public int ParentProcessId { get; }
 }

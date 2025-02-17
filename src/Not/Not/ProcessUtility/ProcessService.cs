@@ -15,11 +15,9 @@ public class ProcessService : BackgroundService
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (!ProcessExists(_context.ParentProcessID))
+            if (!ProcessExists(_context.ParentProcessId))
             {
-                Console.WriteLine(
-                    $"Parent process {_context.ParentProcessID} has exited. Shutting down child process..."
-                );
+                Console.WriteLine($"Parent process {_context.ParentProcessID} has exited. Shutting down child process...");
                 Environment.Exit(0);
             }
             await Task.Delay(2000);

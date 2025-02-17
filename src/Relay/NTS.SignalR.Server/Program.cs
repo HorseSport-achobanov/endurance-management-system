@@ -16,8 +16,8 @@ if (args.Length > 0)
 {
     builder.Services.AddSingleton<ProcessServiceContext>(provider =>
     {
-        var parentProcessID = args[0];
-        return new ProcessServiceContext(parentProcessID);
+        var parentProcessId = args[0];
+        return new ProcessServiceContext(parentProcessId);
     });
     builder.Services.AddHostedService<ProcessService>();
 }
