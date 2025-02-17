@@ -19,7 +19,7 @@ public class ExceptionHandlingHubFilter : IHubFilter
         catch (HubException ex)
         {
             HandleHubException(ex, invocationContext.HubMethodName);
-            return null;
+            return Task.FromException(ex);
         }
     }
 
@@ -31,7 +31,7 @@ public class ExceptionHandlingHubFilter : IHubFilter
         }
         catch (HubException ex)
         {
-            HandleHubException(ex, "OnConnectedAsync");
+            HandleHubException(ex, nameof(OnConnectedAsync));
             return Task.FromException(ex);
         }
     }
@@ -48,7 +48,7 @@ public class ExceptionHandlingHubFilter : IHubFilter
         }
         catch (HubException ex)
         {
-            HandleHubException(ex, "OnDisconnectedAsync");
+            HandleHubException(ex, nameof(OnDisconnectedAsync));
             return Task.FromException(ex);
         }
     }
