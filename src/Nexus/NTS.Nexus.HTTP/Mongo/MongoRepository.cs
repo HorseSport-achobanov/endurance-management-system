@@ -1,12 +1,13 @@
 ﻿using MongoDB.Driver;
 using System.Security.Authentication;
 using Not.Domain;
+using Not.Application.CRUD.Ports;
+using NTS.Storage.Documents;
 
 namespace NTS.Nexus.HTTP.Mongo;
 
-public abstract class MongoRepository<T, TContent>
-    where T : MongoDocument
-    where TContent : IAggregateRoot
+public abstract class MongoRepository<T> : IRepository<T>
+    where T : Document, IAggregateRoot
 {
     readonly IMongoCollection<T> _collection;
 
@@ -18,11 +19,67 @@ public abstract class MongoRepository<T, TContent>
         _collection = new MongoClient(settings).GetDatabase(db).GetCollection<T>(collection);
     }
 
-    protected abstract T CreateDocument(string tenantId, TContent content);
-
-    public async Task Create(MongoInsert<TContent> insert)
+    public async Task Create(T document)
     {
-        var document = CreateDocument(insert.TenantId, insert.Content);
-        await _collection.InsertOneAsync(document);
+        try
+        {
+            await _collection.InsertOneAsync(document);
+        }
+        catch (MongoWriteException ex)
+        {
+            if (ex.WriteError.Code == 11000)
+            {
+                throw new Exception($"Could not insert. Document with ID '{document.Id}' already exists", ex);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
+    public Task<T?> Read(Predicate<T> filter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<T?> Read(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<T>> ReadAll()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<T>> ReadAll(Predicate<T> filter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Update(T entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Delete(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Delete(T entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Delete(Predicate<T> filter)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task Delete(IEnumerable<T> entities)
+    {
+        throw new NotImplementedException();
     }
 }

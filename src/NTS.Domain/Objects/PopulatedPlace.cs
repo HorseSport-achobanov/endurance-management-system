@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using Not.Domain.Base;
+﻿using Not.Domain.Base;
 
 namespace NTS.Domain.Objects;
 

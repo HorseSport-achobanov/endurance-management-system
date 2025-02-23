@@ -24,6 +24,16 @@ public record Timestamp : DomainObject, IComparable<Timestamp>
         return new Timestamp(timestamp);
     }
 
+    public static implicit operator Timestamp?(DateTimeOffset? dateTimeOffset)
+    {
+        return dateTimeOffset == null ? null : new Timestamp(dateTimeOffset.Value);
+    }
+
+    public static implicit operator DateTimeOffset?(Timestamp? timestamp)
+    {
+        return timestamp?.ToDateTimeOffset();
+    }
+
     public static bool operator <(Timestamp? left, Timestamp? right)
     {
         return left?._stamp < right?._stamp;

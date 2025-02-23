@@ -3,38 +3,25 @@ using Microsoft.Azure.Functions.Worker.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Bson.Serialization;
-using Not.Domain.Base;
-using NTS.Domain.Core.Aggregates;
+using Not.Application.CRUD.Ports;
 using NTS.Nexus.HTTP.Functions.Archive;
+using NTS.Storage.Documents;
+using NTS.Storage.Documents.EnduranceEvents;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services.AddSingleton<ArchiveRepository>();
+builder.Services.AddSingleton<IRepository<EnduranceEventDocument>, ArchiveRepository>();
 
 builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
     .ConfigureFunctionsApplicationInsights();
 
-// TODO investigate ImmutableTypeClassMapConvention
-BsonClassMap.RegisterClassMap<ArchiveEntry>(classMap =>
+BsonClassMap.RegisterClassMap<Document>(x => 
 {
-    classMap.AutoMap();
-    classMap.MapProperty(c => c.EnduranceEvent);
-    classMap.MapProperty(c => c.Officials);
-    classMap.MapProperty(c => c.Rankings);
-});
-BsonClassMap.RegisterClassMap<Official>(classMap =>
-{
-    classMap.AutoMap();
-    classMap.MapProperty(c => c.Role);
-});
-
-BsonClassMap.RegisterClassMap<AggregateRoot>(classMap =>
-{
-    classMap.AutoMap();
-    classMap.MapProperty(c => c.Id);
+    x.AutoMap();
+    x.MapIdField(x => x.Id);
 });
 
 builder.Build().Run();

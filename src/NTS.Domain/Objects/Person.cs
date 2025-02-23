@@ -13,9 +13,9 @@ public class Person
         return new Person(names.Split(DELIMITER, StringSplitOptions.RemoveEmptyEntries));
     }
 
-    public static implicit operator string(Person member)
+    public static implicit operator string[](Person member)
     {
-        return member.ToString();
+        return member.Names;
     }
 
     internal static string DELIMITER = " ";
@@ -26,7 +26,7 @@ public class Person
         Names = names;
     }
 
-    public string[] Names { get; private set; } = [];
+    public string[] Names { get; private set; } = []; // TODO: consider encapsulating this;
 
     public override string ToString()
     {

@@ -1,4 +1,4 @@
-﻿namespace NTS.Nexus.HTTP.Common;
+﻿namespace Not.Storage.Tenants;
 
 public interface ITenantAware
 {
