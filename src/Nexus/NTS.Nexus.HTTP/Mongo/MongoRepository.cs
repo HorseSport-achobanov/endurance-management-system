@@ -29,7 +29,7 @@ public abstract class MongoRepository<T> : IRepository<T>
         {
             if (ex.WriteError.Code == 11000)
             {
-                throw new Exception($"Could not insert. Document with ID '{document.Id}' already exists", ex);
+                throw new Exception($"Could not insert. Document with ID '{document.Id}' already exists", ex); //TODO: streamline validation with Middleware
             }
             else
             {

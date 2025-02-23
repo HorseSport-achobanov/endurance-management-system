@@ -19,8 +19,8 @@ public class ArchiveFunctions
         _archive = archive;
     }
 
-    [Function("archive")]
-    public async Task<IActionResult> Archive([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest request)
+    [Function("archive-insert")]
+    public async Task<IActionResult> Insert([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "archive")] HttpRequest request)
     {
         _logger.LogInformation("C# HTTP 'ArchiveFunctions.Insert' processing a request.");
 
@@ -33,7 +33,7 @@ public class ArchiveFunctions
     }
 
     [Function("archive-list")]
-    public async Task<IActionResult> ListArchive([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest request)
+    public async Task<IActionResult> List([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "archive")] HttpRequest request)
     {
         _logger.LogInformation($"C# HTTP 'ArchiveFunctions.List' processing '{request}'.");
 
@@ -43,11 +43,11 @@ public class ArchiveFunctions
     }
 
     [Function("archive-query-by-horse")]
-    public async Task<IActionResult> QueryPerformances([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "archive/horse/{id:int}")] HttpRequest request, int id)
+    public async Task<IActionResult> QueryByHorse([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "archive/horse/{horseId:int}")] HttpRequest request,int horseId)
     {
-        _logger.LogInformation("C# HTTP '{FunctionName}' processing '{request}'", $"{nameof(ArchiveFunctions)}.{nameof(QueryPerformances)}", request);
+        _logger.LogInformation("C# HTTP '{FunctionName}' processing '{request}'", $"{nameof(ArchiveFunctions)}.{nameof(QueryByHorse)}", request);
 
-        var performances = await _archive.GetPerformances(id);
+        var performances = await _archive.GetPerformances(horseId);
 
         return new OkObjectResult(performances);
     }
