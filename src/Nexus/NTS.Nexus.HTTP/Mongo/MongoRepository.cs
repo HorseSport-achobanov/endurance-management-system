@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using Not.Domain;
 using Not.Application.CRUD.Ports;
 using NTS.Storage.Documents;
+using System.Linq.Expressions;
 
 namespace NTS.Nexus.HTTP.Mongo;
 
@@ -38,7 +39,7 @@ public abstract class MongoRepository<T> : IRepository<T>
         }
     }
 
-    public Task<T?> Read(Predicate<T> filter)
+    public Task<T?> Read(Expression<Func<T, bool>> filter)
     {
         throw new NotImplementedException();
     }
@@ -48,14 +49,14 @@ public abstract class MongoRepository<T> : IRepository<T>
         throw new NotImplementedException();
     }
 
-    public Task<IEnumerable<T>> ReadAll()
+    public async Task<IEnumerable<T>> ReadAll()
     {
-        throw new NotImplementedException();
+        return await ReadAll(x => true);
     }
 
-    public Task<IEnumerable<T>> ReadAll(Predicate<T> filter)
+    public async Task<IEnumerable<T>> ReadAll(Expression<Func<T, bool>> filter)
     {
-        throw new NotImplementedException();
+        return await _collection.Find(filter).ToListAsync();
     }
 
     public Task Update(T entity)
@@ -73,7 +74,7 @@ public abstract class MongoRepository<T> : IRepository<T>
         throw new NotImplementedException();
     }
 
-    public Task Delete(Predicate<T> filter)
+    public Task Delete(Expression<Func<T, bool>> filter)
     {
         throw new NotImplementedException();
     }

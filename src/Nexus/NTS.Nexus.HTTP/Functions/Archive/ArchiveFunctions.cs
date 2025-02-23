@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -10,21 +9,21 @@ using NTS.Storage.Documents.EnduranceEvents;
 
 namespace NTS.Nexus.HTTP.Functions.Archive;
 
-public class ArchiveFunction
+public class ArchiveFunctions
 {
-    readonly ILogger<ArchiveFunction> _logger;
+    readonly ILogger<ArchiveFunctions> _logger;
     readonly IRepository<EnduranceEventDocument> _archive;
 
-    public ArchiveFunction(ILogger<ArchiveFunction> logger, IRepository<EnduranceEventDocument> archive)
+    public ArchiveFunctions(ILogger<ArchiveFunctions> logger, IRepository<EnduranceEventDocument> archive)
     {
         _logger = logger;
         _archive = archive;
     }
 
     [Function("archive")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest request)
+    public async Task<IActionResult> Archive([HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequest request)
     {
-        _logger.LogInformation("C# HTTP trigger function processing a request.");
+        _logger.LogInformation("C# HTTP 'ArchiveFunctions.Insert' processing a request.");
 
         var requestBody = await new StreamReader(request.Body).ReadToEndAsync();
         var entry = requestBody.FromJson<ArchiveEntry>();
@@ -32,5 +31,15 @@ public class ArchiveFunction
         await _archive.Create(document);
 
         return new OkObjectResult($"Archived event {entry.EnduranceEvent}");
+    }
+
+    [Function("archive-list")]
+    public async Task<IActionResult> ListArchive([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequest request)
+    {
+        _logger.LogInformation($"C# HTTP 'ArchiveFunctions.List' processing '{request}'.");
+
+        var result = await _archive.ReadAll();
+
+        return new OkObjectResult(result);
     }
 }
