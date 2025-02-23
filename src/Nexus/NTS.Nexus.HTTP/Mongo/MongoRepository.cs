@@ -10,21 +10,20 @@ namespace NTS.Nexus.HTTP.Mongo;
 public abstract class MongoRepository<T> : IRepository<T>
     where T : Document, IAggregateRoot
 {
-    readonly IMongoCollection<T> _collection;
-
     public MongoRepository(string db, string collection)
     {
         var connectionString = @"mongodb://nts-mongo-dev:t4aX66O4VMIvO4vnLvMUEP3sVt8tfcAM651094Xl1WRzv1VsQY9qI48RTb7elIW7kEIt8AcJHfLPACDbrAqJEg==@nts-mongo-dev.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@nts-mongo-dev@";
         var settings = MongoClientSettings.FromUrl(new MongoUrl(connectionString));
         settings.SslSettings = new SslSettings() { EnabledSslProtocols = SslProtocols.Tls12 };
-        _collection = new MongoClient(settings).GetDatabase(db).GetCollection<T>(collection);
+        Collection = new MongoClient(settings).GetDatabase(db).GetCollection<T>(collection);
     }
+    protected IMongoCollection<T> Collection { get; }
 
     public async Task Create(T document)
     {
         try
         {
-            await _collection.InsertOneAsync(document);
+            await Collection.InsertOneAsync(document);
         }
         catch (MongoWriteException ex)
         {
@@ -56,7 +55,7 @@ public abstract class MongoRepository<T> : IRepository<T>
 
     public async Task<IEnumerable<T>> ReadAll(Expression<Func<T, bool>> filter)
     {
-        return await _collection.Find(filter).ToListAsync();
+        return await Collection.Find(filter).ToListAsync();
     }
 
     public Task Update(T entity)

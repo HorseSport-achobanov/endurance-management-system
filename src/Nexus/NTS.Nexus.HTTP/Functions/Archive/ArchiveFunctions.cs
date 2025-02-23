@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Not.Application.CRUD.Ports;
 using Not.Serialization;
 using NTS.Domain.Core.Aggregates;
 using NTS.Storage.Documents.EnduranceEvents;
@@ -12,9 +11,9 @@ namespace NTS.Nexus.HTTP.Functions.Archive;
 public class ArchiveFunctions
 {
     readonly ILogger<ArchiveFunctions> _logger;
-    readonly IRepository<EnduranceEventDocument> _archive;
+    readonly IArchiveRepository _archive;
 
-    public ArchiveFunctions(ILogger<ArchiveFunctions> logger, IRepository<EnduranceEventDocument> archive)
+    public ArchiveFunctions(IArchiveRepository archive, ILogger<ArchiveFunctions> logger)
     {
         _logger = logger;
         _archive = archive;
@@ -41,5 +40,15 @@ public class ArchiveFunctions
         var result = await _archive.ReadAll();
 
         return new OkObjectResult(result);
+    }
+
+    [Function("archive-query-by-horse")]
+    public async Task<IActionResult> QueryPerformances([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "archive/horse/{id:int}")] HttpRequest request, int id)
+    {
+        _logger.LogInformation("C# HTTP '{FunctionName}' processing '{request}'", $"{nameof(ArchiveFunctions)}.{nameof(QueryPerformances)}", request);
+
+        var performances = await _archive.GetPerformances(id);
+
+        return new OkObjectResult(performances);
     }
 }

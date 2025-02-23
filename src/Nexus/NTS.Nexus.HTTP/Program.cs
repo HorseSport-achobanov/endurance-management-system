@@ -13,6 +13,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 builder.ConfigureFunctionsWebApplication();
 
 builder.Services.AddSingleton<IRepository<EnduranceEventDocument>, ArchiveRepository>();
+builder.Services.AddSingleton<IArchiveRepository, ArchiveRepository>();
 
 builder.Services
     .AddApplicationInsightsTelemetryWorkerService()
